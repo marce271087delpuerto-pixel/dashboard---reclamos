@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Operativo — Gestión de Reclamos 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════
+   SCREEN STYLES
+════════════════════════════════════════ */
+:root {
+  --bg: #0b0f1a;
+  --surface: #111827;
+  --surface2: #1a2235;
+  --border: #1e2d45;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.12);
+  --yellow: #f59e0b;
+  --yellow-bg: rgba(245,158,11,0.12);
+  --green: #22c55e;
+  --green-bg: rgba(34,197,94,0.12);
+  --font-d: 'Barlow Condensed', sans-serif;
+  --font-b: 'Barlow', sans-serif;
+  --accent:  #0ea5e9;
+  --accent2: #38bdf8;
+  --glow:  rgba(14,165,233,0.08);
+  --glow2: rgba(6,182,212,0.05);
+}
+body.mode-agua {
+  --accent:  #06b6d4;
+  --accent2: #67e8f9;
+  --glow:  rgba(6,182,212,0.09);
+  --glow2: rgba(99,232,249,0.05);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: var(–font-b);
+min-height: 100vh;
+padding: 28px 24px 40px;
+background-image:
+radial-gradient(ellipse at 10% 0%,   var(–glow)  0%, transparent 60%),
+radial-gradient(ellipse at 90% 100%, var(–glow2) 0%, transparent 60%);
+transition: background 0.5s;
+}
+
+/* ─── TOP BAR ─ */
+.top-bar {
+display: flex;
+align-items: center;
+justify-content: space-between;
+flex-wrap: wrap;
+gap: 10px;
+margin-bottom: 22px;
+}
+.mode-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mode-label { font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(–muted); font-weight: 600; }
+.mode-btn {
+display: flex; align-items: center; gap: 7px;
+background: var(–surface); border: 1px solid var(–border); border-radius: 8px;
+padding: 8px 16px; font-family: var(–font-d); font-size: 0.82rem; font-weight: 700;
+letter-spacing: 0.06em; text-transform: uppercase; color: var(–muted);
+cursor: pointer; transition: all 0.2s; outline: none;
+}
+.mode-btn:hover { border-color: var(–accent); color: var(–text); }
+.mode-btn.active { background: rgba(14,165,233,0.12); border-color: var(–accent); color: var(–accent2); }
+body.mode-agua .mode-btn.active { background: rgba(6,182,212,0.12); }
+
+/* PDF BUTTON */
+.pdf-btn {
+display: flex; align-items: center; gap: 8px;
+background: linear-gradient(135deg, #0ea5e9, #0284c7);
+border: none; border-radius: 8px;
+padding: 10px 20px; font-family: var(–font-d); font-size: 0.85rem; font-weight: 700;
+letter-spacing: 0.08em; text-transform: uppercase; color: #fff;
+cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(14,165,233,0.3);
+outline: none;
+}
+.pdf-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(14,165,233,0.4); }
+.pdf-btn:active { transform: translateY(0); }
+body.mode-agua .pdf-btn { background: linear-gradient(135deg, #06b6d4, #0891b2); box-shadow: 0 4px 14px rgba(6,182,212,0.3); }
+.pdf-icon { font-size: 1rem; }
+
+/* ─── HEADER ─ */
+header {
+display: flex; align-items: flex-start; justify-content: space-between;
+flex-wrap: wrap; gap: 12px; margin-bottom: 28px; padding-bottom: 20px;
+border-bottom: 1px solid var(–border);
+}
+.header-left h1 {
+font-family: var(–font-d); font-size: 2rem; font-weight: 900;
+letter-spacing: 0.03em; text-transform: uppercase; line-height: 1.1; color: #fff;
+}
+.header-left h1 span { color: var(–accent); transition: color 0.4s; }
+.header-left p { margin-top: 6px; font-size: 0.76rem; color: var(–muted); letter-spacing: 0.08em; text-transform: uppercase; }
+.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+.badge {
+background: rgba(14,165,233,0.13); border: 1px solid rgba(14,165,233,0.3);
+color: var(–accent2); font-family: var(–font-d); font-size: 0.7rem; font-weight: 700;
+letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; transition: all 0.4s;
+}
+.date-txt { font-size: 0.74rem; color: var(–muted); }
+
+/* ─── EDIT PANEL ─ */
+.edit-panel { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; margin-bottom: 24px; overflow: hidden; }
+.edit-toggle { display: flex; align-items: center; justify-content: space-between; padding: 13px 20px; cursor: pointer; user-select: none; transition: background 0.15s; }
+.edit-toggle:hover { background: rgba(255,255,255,0.02); }
+.edit-toggle-title { font-family: var(–font-d); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(–muted); display: flex; align-items: center; gap: 8px; }
+.edit-arrow { font-size: 0.85rem; color: var(–muted); transition: transform 0.25s; }
+.edit-arrow.open { transform: rotate(180deg); }
+.edit-body { display: none; padding: 0 20px 20px; border-top: 1px solid var(–border); }
+.edit-body.open { display: block; }
+.edit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-top: 16px; }
+.edit-section-title { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(–accent); margin-top: 16px; margin-bottom: 8px; grid-column: 1/-1; }
+.field-group { display: flex; flex-direction: column; gap: 4px; }
+.field-group label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(–muted); }
+.field-group input { background: var(–surface2); border: 1px solid var(–border); border-radius: 6px; padding: 8px 11px; font-family: var(–font-b); font-size: 0.84rem; color: var(–text); outline: none; transition: border-color 0.15s; width: 100%; }
+.field-group input:focus { border-color: var(–accent); }
+.zone-edit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 9px; margin-top: 12px; grid-column: 1/-1; }
+.zone-edit-row { display: flex; align-items: center; gap: 7px; background: var(–surface2); border: 1px solid var(–border); border-radius: 6px; padding: 7px 10px; }
+.zone-edit-row label { font-size: 0.7rem; color: var(–muted); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.zone-edit-row input { background: transparent; border: none; border-bottom: 1px solid var(–border); border-radius: 0; padding: 2px 4px; font-family: var(–font-d); font-size: 0.95rem; font-weight: 700; color: var(–accent2); outline: none; width: 56px; text-align: right; transition: border-color 0.15s; }
+.zone-edit-row input:focus { border-color: var(–accent); }
+.apply-btn { margin-top: 14px; background: var(–accent); color: #fff; border: none; border-radius: 7px; padding: 9px 22px; font-family: var(–font-d); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s, transform 0.15s; }
+.apply-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* ─── KPIs ─ */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 22px; }
+.kpi { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; padding: 20px 18px 16px; position: relative; overflow: hidden; transition: transform 0.2s, border-color 0.2s; }
+.kpi:hover { transform: translateY(-2px); border-color: rgba(14,165,233,0.3); }
+.kpi::before { content: ‘’; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.kpi.total::before       { background: linear-gradient(90deg, var(–accent), var(–accent2)); }
+.kpi.resueltos::before   { background: linear-gradient(90deg, var(–green), #4ade80); }
+.kpi.pendientes::before  { background: linear-gradient(90deg, var(–yellow), #fbbf24); }
+.kpi.efectividad::before { background: linear-gradient(90deg, #a855f7, #c084fc); }
+.kpi-label { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(–muted); margin-bottom: 7px; }
+.kpi-value { font-family: var(–font-d); font-size: 2.6rem; font-weight: 900; line-height: 1; }
+.kpi.total      .kpi-value { color: var(–accent2); }
+.kpi.resueltos  .kpi-value { color: var(–green); }
+.kpi.pendientes .kpi-value { color: var(–yellow); }
+.kpi.efectividad .kpi-value { color: #c084fc; }
+.kpi-sub { margin-top: 5px; font-size: 0.71rem; color: var(–muted); }
+.kpi-bar { margin-top: 10px; height: 4px; background: var(–border); border-radius: 99px; overflow: hidden; }
+.kpi-bar-fill { height: 100%; border-radius: 99px; }
+.resueltos  .kpi-bar-fill  { background: var(–green); }
+.pendientes .kpi-bar-fill  { background: var(–yellow); }
+.efectividad .kpi-bar-fill { background: #a855f7; }
+
+/* ─── SEMÁFORO ─ */
+.semaforo-global { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; padding: 16px 20px; margin-bottom: 22px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.sg-label { font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(–muted); font-weight: 600; }
+.sg-status { display: flex; align-items: center; gap: 9px; }
+.sg-dot { width: 13px; height: 13px; border-radius: 50%; animation: pulse 1.8s ease-in-out infinite; }
+.sg-dot.red    { background: var(–red);    box-shadow: 0 0 10px var(–red); }
+.sg-dot.yellow { background: var(–yellow); box-shadow: 0 0 10px var(–yellow); }
+.sg-dot.green  { background: var(–green);  box-shadow: 0 0 10px var(–green); }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.sg-text { font-family: var(–font-d); font-size: 0.95rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+.sg-text.red    { color: var(–red); }
+.sg-text.yellow { color: var(–yellow); }
+.sg-text.green  { color: var(–green); }
+.sg-desc { font-size: 0.73rem; color: var(–muted); margin-left: auto; }
+
+/* ─── CONTENT GRID ─ */
+.content-grid { display: grid; grid-template-columns: 1fr 340px; gap: 16px; align-items: start; }
+@media (max-width: 860px) { .content-grid { grid-template-columns: 1fr; } }
+
+/* ─── PANELS ─ */
+.panel { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; overflow: hidden; }
+.panel-header { padding: 14px 20px; border-bottom: 1px solid var(–border); display: flex; align-items: center; justify-content: space-between; }
+.panel-title { font-family: var(–font-d); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(–muted); }
+.panel-count { font-family: var(–font-d); font-size: 0.7rem; color: var(–accent); letter-spacing: 0.06em; }
+table { width: 100%; border-collapse: collapse; }
+thead th { padding: 9px 16px; font-size: 0.61rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(–muted); text-align: left; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(–border); }
+tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; }
+tbody tr:hover { background: rgba(14,165,233,0.04); }
+tbody tr:last-child { border-bottom: none; }
+td { padding: 9px 16px; font-size: 0.82rem; }
+.rank { font-family: var(–font-d); font-weight: 700; font-size: 0.9rem; color: var(–muted); width: 28px; }
+.zona-name { font-weight: 500; }
+.cant { text-align: center; font-family: var(–font-d); font-weight: 700; font-size: 1rem; }
+.status { text-align: center; }
+.chip { display: inline-flex; align-items: center; gap: 4px; font-size: 0.64rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 3px 8px; border-radius: 99px; white-space: nowrap; }
+.chip-red    { background: var(–red-bg);    color: var(–red);    border: 1px solid rgba(239,68,68,0.25); }
+.chip-yellow { background: var(–yellow-bg); color: var(–yellow); border: 1px solid rgba(245,158,11,0.25); }
+.chip-green  { background: var(–green-bg);  color: var(–green);  border: 1px solid rgba(34,197,94,0.25); }
+.bar-wrap { width: 65px; }
+.mini-bar { height: 5px; border-radius: 99px; background: var(–border); overflow: hidden; }
+.mini-bar-fill { height: 100%; border-radius: 99px; }
+.fill-red    { background: var(–red); }
+.fill-yellow { background: var(–yellow); }
+.fill-green  { background: var(–green); }
+.chart-body { padding: 16px 12px; }
+.bar-chart { display: flex; flex-direction: column; gap: 8px; }
+.bar-row { display: flex; align-items: center; gap: 8px; }
+.bar-zona { font-size: 0.68rem; color: var(–muted); width: 74px; flex-shrink: 0; text-align: right; font-weight: 500; }
+.bar-track { flex: 1; height: 19px; background: var(–surface2); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; font-family: var(–font-d); font-size: 0.7rem; font-weight: 700; color: #fff; min-width: 22px; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+.bar-fill.c-red    { background: linear-gradient(90deg, rgba(239,68,68,.5), var(–red)); }
+.bar-fill.c-yellow { background: linear-gradient(90deg, rgba(245,158,11,.4), var(–yellow)); }
+.bar-fill.c-green  { background: linear-gradient(90deg, rgba(34,197,94,.3), var(–green)); }
+.legend { display: flex; gap: 12px; padding: 11px 16px; border-top: 1px solid var(–border); flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.64rem; color: var(–muted); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+/* ─── FOOTER ─ */
+footer { margin-top: 22px; padding-top: 16px; border-top: 1px solid var(–border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+footer p { font-size: 0.66rem; color: var(–muted); }
+.footer-logo { font-family: var(–font-d); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.1em; color: rgba(14,165,233,0.4); text-transform: uppercase; }
+
+/* ════════════════════════════════════════
+PRINT / PDF STYLES
+════════════════════════════════════════ */
+@media print {
+@page {
+size: A4 portrait;
+margin: 14mm 12mm 14mm 12mm;
+}
+
+/* Reset colores para fondo blanco */
+:root {
+–bg:       #ffffff !important;
+–surface:  #f8fafc !important;
+–surface2: #f1f5f9 !important;
+–border:   #e2e8f0 !important;
+–text:     #0f172a !important;
+–muted:    #64748b !important;
+–red:      #dc2626 !important;
+–yellow:   #d97706 !important;
+–green:    #16a34a !important;
+–accent:   #0369a1 !important;
+–accent2:  #0284c7 !important;
+–red-bg:   rgba(220,38,38,0.08) !important;
+–yellow-bg:rgba(217,119,6,0.08) !important;
+–green-bg: rgba(22,163,74,0.08) !important;
+}
+
+- { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+body {
+background: #fff !important;
+color: #0f172a !important;
+padding: 0 !important;
+font-size: 11px !important;
+background-image: none !important;
+}
+
+/* Ocultar controles de UI */
+.top-bar,
+.edit-panel,
+.pdf-btn { display: none !important; }
+
+/* Header PDF */
+header {
+border-bottom: 2px solid #0369a1 !important;
+margin-bottom: 16px !important;
+padding-bottom: 12px !important;
+}
+.header-left h1 {
+font-size: 1.5rem !important;
+color: #0f172a !important;
+}
+.header-left h1 span { color: #0369a1 !important; }
+.header-left p { color: #64748b !important; font-size: 0.72rem !important; }
+.badge { background: #eff6ff !important; border-color: #bfdbfe !important; color: #1d4ed8 !important; }
+.date-txt { color: #64748b !important; }
+
+/* KPIs */
+.kpi-grid { gap: 8px !important; margin-bottom: 14px !important; }
+.kpi {
+background: #f8fafc !important;
+border: 1px solid #e2e8f0 !important;
+break-inside: avoid;
+padding: 14px 14px 12px !important;
+}
+.kpi:hover { transform: none !important; }
+.kpi.total::before       { background: linear-gradient(90deg, #0369a1, #0284c7) !important; }
+.kpi.resueltos::before   { background: linear-gradient(90deg, #16a34a, #22c55e) !important; }
+.kpi.pendientes::before  { background: linear-gradient(90deg, #d97706, #f59e0b) !important; }
+.kpi.efectividad::before { background: linear-gradient(90deg, #7c3aed, #a855f7) !important; }
+.kpi-label { color: #64748b !important; }
+.kpi.total      .kpi-value { color: #0369a1 !important; }
+.kpi.resueltos  .kpi-value { color: #16a34a !important; }
+.kpi.pendientes .kpi-value { color: #d97706 !important; }
+.kpi.efectividad .kpi-value { color: #7c3aed !important; }
+.kpi-sub { color: #94a3b8 !important; }
+.kpi-bar { background: #e2e8f0 !important; }
+.resueltos  .kpi-bar-fill  { background: #16a34a !important; }
+.pendientes .kpi-bar-fill  { background: #d97706 !important; }
+.efectividad .kpi-bar-fill { background: #7c3aed !important; }
+
+/* Semáforo */
+.semaforo-global { background: #f8fafc !important; border-color: #e2e8f0 !important; margin-bottom: 14px !important; }
+.sg-label { color: #64748b !important; }
+.sg-dot { animation: none !important; box-shadow: none !important; }
+.sg-dot.red    { background: #dc2626 !important; }
+.sg-dot.yellow { background: #d97706 !important; }
+.sg-dot.green  { background: #16a34a !important; }
+.sg-text.red    { color: #dc2626 !important; }
+.sg-text.yellow { color: #d97706 !important; }
+.sg-text.green  { color: #16a34a !important; }
+.sg-desc { color: #64748b !important; }
+
+/* Layout: tabla + gráfico lado a lado en impresión */
+.content-grid { grid-template-columns: 1fr 280px !important; gap: 10px !important; }
+
+/* Panels */
+.panel { background: #f8fafc !important; border-color: #e2e8f0 !important; break-inside: avoid; }
+.panel-header { background: #f1f5f9 !important; border-bottom-color: #e2e8f0 !important; }
+.panel-title { color: #475569 !important; }
+.panel-count { color: #0369a1 !important; }
+
+/* Table */
+thead th { color: #64748b !important; background: #f1f5f9 !important; border-bottom-color: #e2e8f0 !important; }
+tbody tr { border-bottom-color: #f1f5f9 !important; }
+tbody tr:hover { background: none !important; }
+.rank { color: #94a3b8 !important; }
+.zona-name { color: #1e293b !important; }
+.chip-red    { background: rgba(220,38,38,0.08) !important; color: #dc2626 !important; border-color: rgba(220,38,38,0.2) !important; }
+.chip-yellow { background: rgba(217,119,6,0.08) !important; color: #d97706 !important; border-color: rgba(217,119,6,0.2) !important; }
+.chip-green  { background: rgba(22,163,74,0.08)  !important; color: #16a34a !important; border-color: rgba(22,163,74,0.2)  !important; }
+.mini-bar { background: #e2e8f0 !important; }
+
+/* Bar chart */
+.bar-track { background: #e2e8f0 !important; }
+.bar-fill.c-red    { background: linear-gradient(90deg, rgba(220,38,38,.4), #dc2626) !important; }
+.bar-fill.c-yellow { background: linear-gradient(90deg, rgba(217,119,6,.4), #d97706) !important; }
+.bar-fill.c-green  { background: linear-gradient(90deg, rgba(22,163,74,.35), #16a34a) !important; }
+.bar-zona { color: #64748b !important; }
+
+/* Legend */
+.legend { border-top-color: #e2e8f0 !important; }
+.legend-item { color: #64748b !important; }
+
+/* Footer */
+footer { border-top-color: #e2e8f0 !important; margin-top: 14px !important; }
+footer p { color: #94a3b8 !important; }
+.footer-logo { color: #bfdbfe !important; }
+
+/* Sello CONFIDENCIAL */
+.print-stamp { display: flex !important; }
+}
+
+/* Sello — oculto en pantalla */
+.print-stamp {
+display: none;
+position: fixed;
+top: 12mm;
+right: 12mm;
+border: 2px solid rgba(220,38,38,0.55);
+border-radius: 4px;
+padding: 4px 10px;
+font-family: var(–font-d);
+font-size: 0.65rem;
+font-weight: 900;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: rgba(220,38,38,0.6);
+transform: rotate(-8deg);
+pointer-events: none;
+}
+</style>
+
+</head>
+<body class="mode-medidor">
+
+<!-- Sello impresión -->
+
+<div class="print-stamp">Uso Interno</div>
+
+<!-- ═══ TOP BAR ═════════════════════════════════════ -->
+
+<div class="top-bar">
+  <div class="mode-group">
+    <span class="mode-label">Tipo de Reclamo:</span>
+    <button class="mode-btn active" id="btn-medidor" onclick="setMode('medidor')">
+      <span>🔧</span> Pérdida Caja del Medidor
+    </button>
+    <button class="mode-btn" id="btn-agua" onclick="setMode('agua')">
+      <span>💧</span> Falta de Agua / Poca Presión
+    </button>
+  </div>
+  <button class="pdf-btn" onclick="generarPDF()">
+    <span class="pdf-icon">📄</span> Generar PDF
+  </button>
+</div>
+
+<!-- ═══ HEADER ════════════════════════════════════════ -->
+
+<header>
+  <div class="header-left">
+    <h1>Reclamos — <span id="title-span">Pérdida Caja del Medidor</span></h1>
+    <p id="main-sub">Sistema de Gestión · Resumen Operativo 2026</p>
+  </div>
+  <div class="header-right">
+    <span class="badge" id="badge-txt">🔧 Pérdida · Caja del Medidor</span>
+    <span class="date-txt" id="fecha"></span>
+  </div>
+</header>
+
+<!-- ═══ PANEL DE EDICIÓN ══════════════════════════════ -->
+
+<div class="edit-panel">
+  <div class="edit-toggle" onclick="toggleEdit()">
+    <span class="edit-toggle-title">✏️ Editar datos del dashboard</span>
+    <span class="edit-arrow" id="edit-arrow">▼</span>
+  </div>
+  <div class="edit-body" id="edit-body">
+    <div class="edit-grid">
+      <div class="edit-section-title">📊 KPIs Generales</div>
+      <div class="field-group">
+        <label>Total de Reclamos</label>
+        <input type="number" id="inp-total" value="2143">
+      </div>
+      <div class="field-group">
+        <label>Atendidos / Finiquitados / Rechazados</label>
+        <input type="number" id="inp-resueltos" value="1034">
+      </div>
+      <div class="field-group">
+        <label>Asignados / Pendientes</label>
+        <input type="number" id="inp-pendientes" value="1109">
+      </div>
+      <div class="edit-section-title">📍 Reclamos por Zona</div>
+      <div class="zone-edit-grid" id="zone-edit-grid"></div>
+      <div style="grid-column:1/-1">
+        <button class="apply-btn" onclick="applyEdits()">✅ Aplicar cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ KPIs ══════════════════════════════════════════ -->
+
+<div class="kpi-grid">
+  <div class="kpi total">
+    <div class="kpi-label">Total Reclamos</div>
+    <div class="kpi-value" id="kpi-total">2.143</div>
+    <div class="kpi-sub">Acumulado al día de hoy · 2026</div>
+  </div>
+  <div class="kpi resueltos">
+    <div class="kpi-label">Atendidos / Finiquitados / Rechazados</div>
+    <div class="kpi-value" id="kpi-resueltos">1.034</div>
+    <div class="kpi-sub" id="kpi-res-sub">48% del total resueltos</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-res" style="width:48%"></div></div>
+  </div>
+  <div class="kpi pendientes">
+    <div class="kpi-label">Asignados / Pendientes</div>
+    <div class="kpi-value" id="kpi-pendientes">1.109</div>
+    <div class="kpi-sub" id="kpi-pen-sub">51% del total en curso</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-pen" style="width:51%"></div></div>
+  </div>
+  <div class="kpi efectividad">
+    <div class="kpi-label">Efectividad de Gestión</div>
+    <div class="kpi-value" id="kpi-efect">48%</div>
+    <div class="kpi-sub">Tasa de cierre acumulada</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-efect" style="width:48%"></div></div>
+  </div>
+</div>
+
+<!-- ═══ SEMÁFORO GLOBAL ═══════════════════════════════ -->
+
+<div class="semaforo-global">
+  <div class="sg-label">🚦 Semáforo Global del Sistema</div>
+  <div class="sg-status">
+    <div class="sg-dot red" id="sg-dot"></div>
+    <div class="sg-text red" id="sg-text">Crítico — Backlog Elevado</div>
+  </div>
+  <div class="sg-desc" id="sg-desc">5 zonas en estado crítico · 51% pendiente de resolución</div>
+</div>
+
+<!-- ═══ CONTENT GRID ══════════════════════════════════ -->
+
+<div class="content-grid">
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">📍 Ranking por Zona — Tabla Inteligente</span>
+      <span class="panel-count" id="panel-count">13 zonas activas</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Zona</th>
+          <th style="text-align:center">Reclamos</th>
+          <th style="text-align:center">Estado</th>
+          <th>Volumen</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-zonas"></tbody>
+    </table>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> Crítico &gt;150</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div> Alto/Medio 41–150</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Bajo ≤40</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">📈 Barras por Zona</span>
+    </div>
+    <div class="chart-body">
+      <div class="bar-chart" id="bar-chart"></div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> Crítico</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div> Alto/Medio</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Bajo</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ════════════════════════════════════════ -->
+
+<footer>
+  <p>Datos correspondientes al período enero–abril 2026 · Actualización: <span id="hoy2"></span> · Generado con Dashboard PRO</p>
+  <div class="footer-logo" id="footer-logo">Gestión Operativa · Sistema de Reclamos</div>
+</footer>
+
+<script>
+// ════════════════════════════════════════
+//  DATA
+// ════════════════════════════════════════
+const DATA = {
+  medidor: {
+    titulo: 'Pérdida Caja del Medidor', badge: '🔧 Pérdida · Caja del Medidor',
+    total: 2143, resueltos: 1034, pendientes: 1109,
+    zonas: [
+      { nombre:'Zona 12',        cant:256 },{ nombre:'Zona 15',        cant:203 },
+      { nombre:'Zona 14',        cant:169 },{ nombre:'Zona 26 F.M.',   cant:126 },
+      { nombre:'Zona 13',        cant:103 },{ nombre:'Zona 28 Luque',  cant: 72 },
+      { nombre:'Zona 29 MRA',    cant: 63 },{ nombre:'Zona 10',        cant: 55 },
+      { nombre:'Zona 11',        cant: 39 },{ nombre:'Zona 18 V.Elisa',cant:  7 },
+      { nombre:'Zona 37 S.A.',   cant:  6 },{ nombre:'Zona 27 S.L.',   cant:  6 },
+      { nombre:'Zona 16 Limpio', cant:  5 },
+    ]
+  },
+  agua: {
+    titulo: 'Falta de Agua y Poca Presión', badge: '💧 Falta de Agua / Poca Presión',
+    total: 0, resueltos: 0, pendientes: 0,
+    zonas: [
+      { nombre:'Zona 10', cant:0 },{ nombre:'Zona 11', cant:0 },
+      { nombre:'Zona 12', cant:0 },{ nombre:'Zona 13', cant:0 },
+      { nombre:'Zona 14', cant:0 },{ nombre:'Zona 15', cant:0 },
+      { nombre:'Zona 16 Limpio',  cant:0 },{ nombre:'Zona 18 V.Elisa', cant:0 },
+      { nombre:'Zona 26 F.M.',    cant:0 },{ nombre:'Zona 27 S.L.',    cant:0 },
+      { nombre:'Zona 28 Luque',   cant:0 },{ nombre:'Zona 29 MRA',     cant:0 },
+      { nombre:'Zona 37 S.A.',    cant:0 },
+    ]
+  }
+};
+
+let currentMode = 'medidor';
+
+function classify(c) {
+  if (c > 150) return { label:'🔴 Crítico',    cls:'chip-red',    bar:'fill-red',    chart:'c-red',    color:'var(--red)'    };
+  if (c >= 41) return { label:'🟡 Alto/Medio', cls:'chip-yellow', bar:'fill-yellow', chart:'c-yellow', color:'var(--yellow)' };
+  return             { label:'🟢 Bajo',        cls:'chip-green',  bar:'fill-green',  chart:'c-green',  color:'var(--green)'  };
+}
+
+// ════════════════════════════════════════
+//  RENDER
+// ════════════════════════════════════════
+function renderDashboard() {
+  const d = DATA[currentMode];
+  const zonas = [...d.zonas].sort((a,b) => b.cant - a.cant);
+  const MAX = Math.max(...zonas.map(z => z.cant), 1);
+
+  document.getElementById('title-span').textContent = d.titulo;
+  document.getElementById('badge-txt').textContent  = d.badge;
+
+  const pctRes = d.total ? Math.round(d.resueltos  / d.total * 100) : 0;
+  const pctPen = d.total ? Math.round(d.pendientes / d.total * 100) : 0;
+
+  document.getElementById('kpi-total').textContent      = d.total.toLocaleString('es-PY');
+  document.getElementById('kpi-resueltos').textContent  = d.resueltos.toLocaleString('es-PY');
+  document.getElementById('kpi-pendientes').textContent = d.pendientes.toLocaleString('es-PY');
+  document.getElementById('kpi-efect').textContent      = pctRes + '%';
+  document.getElementById('kpi-res-sub').textContent    = pctRes + '% del total resueltos';
+  document.getElementById('kpi-pen-sub').textContent    = pctPen + '% del total en curso';
+  document.getElementById('bar-res').style.width        = pctRes + '%';
+  document.getElementById('bar-pen').style.width        = pctPen + '%';
+  document.getElementById('bar-efect').style.width      = pctRes + '%';
+
+  // Semáforo global
+  const criticas = zonas.filter(z => z.cant > 150).length;
+  const altas    = zonas.filter(z => z.cant >= 41 && z.cant <= 150).length;
+  let lvl = 'green', msg = 'Operación Normal';
+  if (criticas > 0)    { lvl='red';    msg='Crítico — Backlog Elevado'; }
+  else if (altas > 2)  { lvl='yellow'; msg='Alto — Atención Requerida'; }
+  document.getElementById('sg-dot').className  = 'sg-dot '  + lvl;
+  document.getElementById('sg-text').className = 'sg-text ' + lvl;
+  document.getElementById('sg-text').textContent = msg;
+  document.getElementById('sg-desc').textContent =
+    criticas + ' zona(s) críticas · ' + pctPen + '% pendiente de resolución';
+
+  // Tabla
+  const tbody = document.getElementById('tabla-zonas');
+  tbody.innerHTML = '';
+  zonas.forEach((z, i) => {
+    const s   = classify(z.cant);
+    const pct = Math.round((z.cant / MAX) * 100);
+    const tr  = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="rank">${i+1}</td>
+      <td class="zona-name">${z.nombre}</td>
+      <td class="cant" style="color:${s.color}">${z.cant}</td>
+      <td class="status"><span class="chip ${s.cls}">${s.label}</span></td>
+      <td class="bar-wrap"><div class="mini-bar"><div class="mini-bar-fill ${s.bar}" style="width:${pct}%"></div></div></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('panel-count').textContent = zonas.length + ' zonas activas';
+
+  // Gráfico
+  const chart = document.getElementById('bar-chart');
+  chart.innerHTML = '';
+  zonas.forEach(z => {
+    const s   = classify(z.cant);
+    const pct = Math.round((z.cant / MAX) * 100);
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `
+      <div class="bar-zona">${z.nombre.replace('Zona ','Z.')}</div>
+      <div class="bar-track">
+        <div class="bar-fill ${s.chart}" style="width:0%" data-w="${pct}%">${z.cant}</div>
+      </div>
+    `;
+    chart.appendChild(row);
+  });
+  setTimeout(() => {
+    document.querySelectorAll('.bar-fill[data-w]').forEach(el => { el.style.width = el.dataset.w; });
+  }, 80);
+}
+
+// ════════════════════════════════════════
+//  EDIT
+// ════════════════════════════════════════
+function buildEditInputs() {
+  const d = DATA[currentMode];
+  document.getElementById('inp-total').value      = d.total;
+  document.getElementById('inp-resueltos').value  = d.resueltos;
+  document.getElementById('inp-pendientes').value = d.pendientes;
+  const grid = document.getElementById('zone-edit-grid');
+  grid.innerHTML = '';
+  d.zonas.forEach((z, i) => {
+    const row = document.createElement('div');
+    row.className = 'zone-edit-row';
+    row.innerHTML = `<label title="${z.nombre}">${z.nombre}</label><input type="number" min="0" data-idx="${i}" value="${z.cant}">`;
+    grid.appendChild(row);
+  });
+}
+
+function applyEdits() {
+  const d = DATA[currentMode];
+  d.total      = parseInt(document.getElementById('inp-total').value)      || 0;
+  d.resueltos  = parseInt(document.getElementById('inp-resueltos').value)  || 0;
+  d.pendientes = parseInt(document.getElementById('inp-pendientes').value) || 0;
+  document.querySelectorAll('#zone-edit-grid input[data-idx]').forEach(inp => {
+    d.zonas[parseInt(inp.dataset.idx)].cant = parseInt(inp.value) || 0;
+  });
+  renderDashboard();
+}
+
+function toggleEdit() {
+  const body  = document.getElementById('edit-body');
+  const arrow = document.getElementById('edit-arrow');
+  const open  = body.classList.toggle('open');
+  arrow.classList.toggle('open', open);
+  if (open) buildEditInputs();
+}
+
+// ════════════════════════════════════════
+//  MODE SWITCH
+// ════════════════════════════════════════
+function setMode(mode) {
+  currentMode = mode;
+  document.body.className = 'mode-' + mode;
+  document.getElementById('btn-medidor').classList.toggle('active', mode === 'medidor');
+  document.getElementById('btn-agua').classList.toggle('active',    mode === 'agua');
+  buildEditInputs();
+  renderDashboard();
+}
+
+// ════════════════════════════════════════
+//  GENERAR PDF
+// ════════════════════════════════════════
+function generarPDF() {
+  // Asegurar que las barras estén al ancho correcto antes de imprimir
+  document.querySelectorAll('.bar-fill[data-w]').forEach(el => { el.style.width = el.dataset.w; });
+
+  // Título del documento = tipo de reclamo + fecha
+  const d    = DATA[currentMode];
+  const hoy  = new Date().toLocaleDateString('es-PY', { day:'2-digit', month:'long', year:'numeric' });
+  const prev = document.title;
+  document.title = `Dashboard Reclamos — ${d.titulo} — ${hoy}`;
+
+  window.print();
+
+  // Restaurar título original
+  setTimeout(() => { document.title = prev; }, 1000);
+}
+
+// ════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════
+const now = new Date();
+const fmt = now.toLocaleDateString('es-PY', { day:'2-digit', month:'long', year:'numeric' });
+document.getElementById('fecha').textContent = fmt;
+document.getElementById('hoy2').textContent  = fmt;
+renderDashboard();
+</script>
+
+</body>
+</html>
