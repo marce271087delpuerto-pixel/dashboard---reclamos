@@ -4,717 +4,647 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Operativo — Gestión de Reclamos 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Dashboard Reclamos 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ════════════════════════════════════════
-   SCREEN STYLES
-════════════════════════════════════════ */
 :root {
-  --bg: #0b0f1a;
-  --surface: #111827;
-  --surface2: #1a2235;
-  --border: #1e2d45;
-  --text: #e2e8f0;
-  --muted: #64748b;
-  --red: #ef4444;
-  --red-bg: rgba(239,68,68,0.12);
-  --yellow: #f59e0b;
-  --yellow-bg: rgba(245,158,11,0.12);
-  --green: #22c55e;
-  --green-bg: rgba(34,197,94,0.12);
-  --font-d: 'Barlow Condensed', sans-serif;
-  --font-b: 'Barlow', sans-serif;
-  --accent:  #0ea5e9;
-  --accent2: #38bdf8;
-  --glow:  rgba(14,165,233,0.08);
-  --glow2: rgba(6,182,212,0.05);
+  --bg:#060910; --s1:#0d1117; --s2:#161b22; --s3:#21262d; --border:#30363d;
+  --text:#e6edf3; --muted:#7d8590;
+  --red:#f85149; --red-s:rgba(248,81,73,.15); --red-b:rgba(248,81,73,.3);
+  --yellow:#e3b341; --yellow-s:rgba(227,179,65,.15); --yellow-b:rgba(227,179,65,.3);
+  --green:#3fb950; --green-s:rgba(63,185,80,.15); --green-b:rgba(63,185,80,.3);
+  --blue:#58a6ff; --blue-s:rgba(88,166,255,.15); --purple:#bc8cff;
+  --fd:'Space Grotesk',sans-serif; --fb:'Inter',sans-serif;
+  --accent:#58a6ff;
 }
-body.mode-agua {
-  --accent:  #06b6d4;
-  --accent2: #67e8f9;
-  --glow:  rgba(6,182,212,0.09);
-  --glow2: rgba(99,232,249,0.05);
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);min-height:100vh;padding:20px 16px 48px;transition:background .4s,color .4s}
 
-body {
-background: var(–bg);
-color: var(–text);
-font-family: var(–font-b);
-min-height: 100vh;
-padding: 28px 24px 40px;
-background-image:
-radial-gradient(ellipse at 10% 0%,   var(–glow)  0%, transparent 60%),
-radial-gradient(ellipse at 90% 100%, var(–glow2) 0%, transparent 60%);
-transition: background 0.5s;
-}
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.modes{display:flex;gap:6px;flex-wrap:wrap}
+.mode-btn{display:flex;align-items:center;gap:5px;background:var(–s1);border:1px solid var(–border);border-radius:8px;padding:7px 12px;font-family:var(–fd);font-size:.76rem;font-weight:600;color:var(–muted);cursor:pointer;transition:all .2s;outline:none}
+.mode-btn:hover{border-color:var(–accent);color:var(–text)}
+.mode-btn.active{background:var(–blue-s);border-color:var(–accent);color:var(–accent)}
+.top-actions{display:flex;gap:6px;flex-wrap:wrap}
+.tbtn{display:flex;align-items:center;gap:5px;background:var(–s1);border:1px solid var(–border);border-radius:8px;padding:7px 13px;font-family:var(–fd);font-size:.74rem;font-weight:600;color:var(–muted);cursor:pointer;transition:all .2s;outline:none}
+.tbtn:hover{border-color:var(–accent);color:var(–text)}
+.tbtn.pri{background:var(–accent);color:#fff;border-color:var(–accent)}
+.tbtn.pri:hover{opacity:.85}
 
-/* ─── TOP BAR ─ */
-.top-bar {
-display: flex;
-align-items: center;
-justify-content: space-between;
-flex-wrap: wrap;
-gap: 10px;
-margin-bottom: 22px;
-}
-.mode-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.mode-label { font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(–muted); font-weight: 600; }
-.mode-btn {
-display: flex; align-items: center; gap: 7px;
-background: var(–surface); border: 1px solid var(–border); border-radius: 8px;
-padding: 8px 16px; font-family: var(–font-d); font-size: 0.82rem; font-weight: 700;
-letter-spacing: 0.06em; text-transform: uppercase; color: var(–muted);
-cursor: pointer; transition: all 0.2s; outline: none;
-}
-.mode-btn:hover { border-color: var(–accent); color: var(–text); }
-.mode-btn.active { background: rgba(14,165,233,0.12); border-color: var(–accent); color: var(–accent2); }
-body.mode-agua .mode-btn.active { background: rgba(6,182,212,0.12); }
+/* ── EDIT PANEL ── */
+.epanel{background:var(–s1);border:1px solid var(–border);border-radius:12px;margin-bottom:16px;overflow:hidden}
+.ehead{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;cursor:pointer;user-select:none;transition:background .15s}
+.ehead:hover{background:var(–s2)}
+.ehead-lbl{font-size:.72rem;font-weight:700;color:var(–muted);letter-spacing:.04em;display:flex;align-items:center;gap:6px}
+.echev{color:var(–muted);font-size:.78rem;transition:transform .22s}
+.echev.open{transform:rotate(180deg)}
+.econtent{display:none;padding:0 16px 16px;border-top:1px solid var(–border)}
+.econtent.open{display:block}
 
-/* PDF BUTTON */
-.pdf-btn {
-display: flex; align-items: center; gap: 8px;
-background: linear-gradient(135deg, #0ea5e9, #0284c7);
-border: none; border-radius: 8px;
-padding: 10px 20px; font-family: var(–font-d); font-size: 0.85rem; font-weight: 700;
-letter-spacing: 0.08em; text-transform: uppercase; color: #fff;
-cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(14,165,233,0.3);
-outline: none;
-}
-.pdf-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(14,165,233,0.4); }
-.pdf-btn:active { transform: translateY(0); }
-body.mode-agua .pdf-btn { background: linear-gradient(135deg, #06b6d4, #0891b2); box-shadow: 0 4px 14px rgba(6,182,212,0.3); }
-.pdf-icon { font-size: 1rem; }
+/* tabs inside panel */
+.etabs{display:flex;gap:4px;flex-wrap:wrap;padding:10px 0 6px}
+.etab{padding:5px 12px;border-radius:6px;border:1px solid var(–border);font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(–muted);cursor:pointer;transition:all .18s;background:var(–s2)}
+.etab:hover{border-color:var(–accent);color:var(–text)}
+.etab.active{background:var(–blue-s);border-color:var(–accent);color:var(–accent)}
+.etab-body{display:none}.etab-body.active{display:block}
 
-/* ─── HEADER ─ */
-header {
-display: flex; align-items: flex-start; justify-content: space-between;
-flex-wrap: wrap; gap: 12px; margin-bottom: 28px; padding-bottom: 20px;
-border-bottom: 1px solid var(–border);
-}
-.header-left h1 {
-font-family: var(–font-d); font-size: 2rem; font-weight: 900;
-letter-spacing: 0.03em; text-transform: uppercase; line-height: 1.1; color: #fff;
-}
-.header-left h1 span { color: var(–accent); transition: color 0.4s; }
-.header-left p { margin-top: 6px; font-size: 0.76rem; color: var(–muted); letter-spacing: 0.08em; text-transform: uppercase; }
-.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
-.badge {
-background: rgba(14,165,233,0.13); border: 1px solid rgba(14,165,233,0.3);
-color: var(–accent2); font-family: var(–font-d); font-size: 0.7rem; font-weight: 700;
-letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; transition: all 0.4s;
-}
-.date-txt { font-size: 0.74rem; color: var(–muted); }
+.eg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:8px}
+.eg-title{grid-column:1/-1;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(–accent);margin-top:8px;padding-top:8px;border-top:1px solid var(–border)}
+.fg{display:flex;flex-direction:column;gap:3px}
+.fg label{font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(–muted)}
+.fg input,.fg select{background:var(–s2);border:1px solid var(–border);border-radius:6px;padding:7px 9px;font-family:var(–fb);font-size:.82rem;color:var(–text);outline:none;width:100%;transition:border-color .15s}
+.fg input:focus,.fg select:focus{border-color:var(–accent)}
 
-/* ─── EDIT PANEL ─ */
-.edit-panel { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; margin-bottom: 24px; overflow: hidden; }
-.edit-toggle { display: flex; align-items: center; justify-content: space-between; padding: 13px 20px; cursor: pointer; user-select: none; transition: background 0.15s; }
-.edit-toggle:hover { background: rgba(255,255,255,0.02); }
-.edit-toggle-title { font-family: var(–font-d); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(–muted); display: flex; align-items: center; gap: 8px; }
-.edit-arrow { font-size: 0.85rem; color: var(–muted); transition: transform 0.25s; }
-.edit-arrow.open { transform: rotate(180deg); }
-.edit-body { display: none; padding: 0 20px 20px; border-top: 1px solid var(–border); }
-.edit-body.open { display: block; }
-.edit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-top: 16px; }
-.edit-section-title { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(–accent); margin-top: 16px; margin-bottom: 8px; grid-column: 1/-1; }
-.field-group { display: flex; flex-direction: column; gap: 4px; }
-.field-group label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(–muted); }
-.field-group input { background: var(–surface2); border: 1px solid var(–border); border-radius: 6px; padding: 8px 11px; font-family: var(–font-b); font-size: 0.84rem; color: var(–text); outline: none; transition: border-color 0.15s; width: 100%; }
-.field-group input:focus { border-color: var(–accent); }
-.zone-edit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 9px; margin-top: 12px; grid-column: 1/-1; }
-.zone-edit-row { display: flex; align-items: center; gap: 7px; background: var(–surface2); border: 1px solid var(–border); border-radius: 6px; padding: 7px 10px; }
-.zone-edit-row label { font-size: 0.7rem; color: var(–muted); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.zone-edit-row input { background: transparent; border: none; border-bottom: 1px solid var(–border); border-radius: 0; padding: 2px 4px; font-family: var(–font-d); font-size: 0.95rem; font-weight: 700; color: var(–accent2); outline: none; width: 56px; text-align: right; transition: border-color 0.15s; }
-.zone-edit-row input:focus { border-color: var(–accent); }
-.apply-btn { margin-top: 14px; background: var(–accent); color: #fff; border: none; border-radius: 7px; padding: 9px 22px; font-family: var(–font-d); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s, transform 0.15s; }
-.apply-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+/* zone inputs */
+.zg{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:7px;margin-top:8px;grid-column:1/-1}
+.zr{display:flex;align-items:center;gap:6px;background:var(–s2);border:1px solid var(–border);border-radius:6px;padding:6px 10px}
+.zr label{font-size:.66rem;color:var(–muted);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zr input{background:transparent;border:none;border-bottom:1px solid var(–border);padding:2px 3px;font-family:var(–fd);font-size:.9rem;font-weight:700;color:var(–accent);outline:none;width:50px;text-align:right;transition:border-color .15s}
+.zr input:focus{border-color:var(–accent)}
 
-/* ─── KPIs ─ */
-.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 22px; }
-.kpi { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; padding: 20px 18px 16px; position: relative; overflow: hidden; transition: transform 0.2s, border-color 0.2s; }
-.kpi:hover { transform: translateY(-2px); border-color: rgba(14,165,233,0.3); }
-.kpi::before { content: ‘’; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-.kpi.total::before       { background: linear-gradient(90deg, var(–accent), var(–accent2)); }
-.kpi.resueltos::before   { background: linear-gradient(90deg, var(–green), #4ade80); }
-.kpi.pendientes::before  { background: linear-gradient(90deg, var(–yellow), #fbbf24); }
-.kpi.efectividad::before { background: linear-gradient(90deg, #a855f7, #c084fc); }
-.kpi-label { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(–muted); margin-bottom: 7px; }
-.kpi-value { font-family: var(–font-d); font-size: 2.6rem; font-weight: 900; line-height: 1; }
-.kpi.total      .kpi-value { color: var(–accent2); }
-.kpi.resueltos  .kpi-value { color: var(–green); }
-.kpi.pendientes .kpi-value { color: var(–yellow); }
-.kpi.efectividad .kpi-value { color: #c084fc; }
-.kpi-sub { margin-top: 5px; font-size: 0.71rem; color: var(–muted); }
-.kpi-bar { margin-top: 10px; height: 4px; background: var(–border); border-radius: 99px; overflow: hidden; }
-.kpi-bar-fill { height: 100%; border-radius: 99px; }
-.resueltos  .kpi-bar-fill  { background: var(–green); }
-.pendientes .kpi-bar-fill  { background: var(–yellow); }
-.efectividad .kpi-bar-fill { background: #a855f7; }
+/* color themes */
+.themes{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.th-swatch{width:38px;height:38px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:all .2s;position:relative;overflow:hidden}
+.th-swatch:hover{transform:scale(1.1)}
+.th-swatch.active::after{content:‘✓’;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.85rem;color:#fff;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.th-swatch.active{border-color:#fff;box-shadow:0 0 0 2px var(–accent)}
 
-/* ─── SEMÁFORO ─ */
-.semaforo-global { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; padding: 16px 20px; margin-bottom: 22px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-.sg-label { font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(–muted); font-weight: 600; }
-.sg-status { display: flex; align-items: center; gap: 9px; }
-.sg-dot { width: 13px; height: 13px; border-radius: 50%; animation: pulse 1.8s ease-in-out infinite; }
-.sg-dot.red    { background: var(–red);    box-shadow: 0 0 10px var(–red); }
-.sg-dot.yellow { background: var(–yellow); box-shadow: 0 0 10px var(–yellow); }
-.sg-dot.green  { background: var(–green);  box-shadow: 0 0 10px var(–green); }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-.sg-text { font-family: var(–font-d); font-size: 0.95rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
-.sg-text.red    { color: var(–red); }
-.sg-text.yellow { color: var(–yellow); }
-.sg-text.green  { color: var(–green); }
-.sg-desc { font-size: 0.73rem; color: var(–muted); margin-left: auto; }
+/* custom bg color */
+.color-row{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.color-row label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(–muted)}
+.color-row input[type=color]{width:40px;height:32px;border:1px solid var(–border);border-radius:6px;background:var(–s2);cursor:pointer;padding:2px}
+.color-row input[type=text]{width:95px}
 
-/* ─── CONTENT GRID ─ */
-.content-grid { display: grid; grid-template-columns: 1fr 340px; gap: 16px; align-items: start; }
-@media (max-width: 860px) { .content-grid { grid-template-columns: 1fr; } }
+/* semaforo thresholds */
+.semcfg{display:grid;grid-template-columns:1fr 1fr;gap:8px;grid-column:1/-1;margin-top:4px}
 
-/* ─── PANELS ─ */
-.panel { background: var(–surface); border: 1px solid var(–border); border-radius: 12px; overflow: hidden; }
-.panel-header { padding: 14px 20px; border-bottom: 1px solid var(–border); display: flex; align-items: center; justify-content: space-between; }
-.panel-title { font-family: var(–font-d); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(–muted); }
-.panel-count { font-family: var(–font-d); font-size: 0.7rem; color: var(–accent); letter-spacing: 0.06em; }
-table { width: 100%; border-collapse: collapse; }
-thead th { padding: 9px 16px; font-size: 0.61rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(–muted); text-align: left; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(–border); }
-tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; }
-tbody tr:hover { background: rgba(14,165,233,0.04); }
-tbody tr:last-child { border-bottom: none; }
-td { padding: 9px 16px; font-size: 0.82rem; }
-.rank { font-family: var(–font-d); font-weight: 700; font-size: 0.9rem; color: var(–muted); width: 28px; }
-.zona-name { font-weight: 500; }
-.cant { text-align: center; font-family: var(–font-d); font-weight: 700; font-size: 1rem; }
-.status { text-align: center; }
-.chip { display: inline-flex; align-items: center; gap: 4px; font-size: 0.64rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; padding: 3px 8px; border-radius: 99px; white-space: nowrap; }
-.chip-red    { background: var(–red-bg);    color: var(–red);    border: 1px solid rgba(239,68,68,0.25); }
-.chip-yellow { background: var(–yellow-bg); color: var(–yellow); border: 1px solid rgba(245,158,11,0.25); }
-.chip-green  { background: var(–green-bg);  color: var(–green);  border: 1px solid rgba(34,197,94,0.25); }
-.bar-wrap { width: 65px; }
-.mini-bar { height: 5px; border-radius: 99px; background: var(–border); overflow: hidden; }
-.mini-bar-fill { height: 100%; border-radius: 99px; }
-.fill-red    { background: var(–red); }
-.fill-yellow { background: var(–yellow); }
-.fill-green  { background: var(–green); }
-.chart-body { padding: 16px 12px; }
-.bar-chart { display: flex; flex-direction: column; gap: 8px; }
-.bar-row { display: flex; align-items: center; gap: 8px; }
-.bar-zona { font-size: 0.68rem; color: var(–muted); width: 74px; flex-shrink: 0; text-align: right; font-weight: 500; }
-.bar-track { flex: 1; height: 19px; background: var(–surface2); border-radius: 4px; overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; font-family: var(–font-d); font-size: 0.7rem; font-weight: 700; color: #fff; min-width: 22px; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
-.bar-fill.c-red    { background: linear-gradient(90deg, rgba(239,68,68,.5), var(–red)); }
-.bar-fill.c-yellow { background: linear-gradient(90deg, rgba(245,158,11,.4), var(–yellow)); }
-.bar-fill.c-green  { background: linear-gradient(90deg, rgba(34,197,94,.3), var(–green)); }
-.legend { display: flex; gap: 12px; padding: 11px 16px; border-top: 1px solid var(–border); flex-wrap: wrap; }
-.legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.64rem; color: var(–muted); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
-.legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+.apply-btn{margin-top:12px;background:var(–accent);color:#fff;border:none;border-radius:7px;padding:8px 18px;font-family:var(–fd);font-size:.78rem;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:opacity .2s,transform .15s}
+.apply-btn:hover{opacity:.85;transform:translateY(-1px)}
 
-/* ─── FOOTER ─ */
-footer { margin-top: 22px; padding-top: 16px; border-top: 1px solid var(–border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
-footer p { font-size: 0.66rem; color: var(–muted); }
-.footer-logo { font-family: var(–font-d); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.1em; color: rgba(14,165,233,0.4); text-transform: uppercase; }
+/* ── HEADER ── */
+header{margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(–border)}
+.hinner{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.htag{display:inline-flex;align-items:center;gap:5px;background:var(–blue-s);border:1px solid rgba(88,166,255,.25);border-radius:6px;padding:3px 10px;font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(–accent);margin-bottom:8px}
+h1{font-family:var(–fd);font-size:1.6rem;font-weight:700;color:var(–text);line-height:1.15}
+h1 em{color:var(–accent);font-style:normal}
+.hsub{margin-top:4px;font-size:.72rem;color:var(–muted)}
+.hdate{font-size:.7rem;color:var(–muted);text-align:right}
 
-/* ════════════════════════════════════════
-PRINT / PDF STYLES
-════════════════════════════════════════ */
-@media print {
-@page {
-size: A4 portrait;
-margin: 14mm 12mm 14mm 12mm;
-}
+/* editable text */
+[contenteditable]{outline:none;cursor:text;border-radius:4px;transition:background .18s,box-shadow .18s}
+[contenteditable]:hover{background:rgba(88,166,255,.07)}
+[contenteditable]:focus{background:rgba(88,166,255,.1);box-shadow:0 0 0 1px var(–accent)}
 
-/* Reset colores para fondo blanco */
-:root {
-–bg:       #ffffff !important;
-–surface:  #f8fafc !important;
-–surface2: #f1f5f9 !important;
-–border:   #e2e8f0 !important;
-–text:     #0f172a !important;
-–muted:    #64748b !important;
-–red:      #dc2626 !important;
-–yellow:   #d97706 !important;
-–green:    #16a34a !important;
-–accent:   #0369a1 !important;
-–accent2:  #0284c7 !important;
-–red-bg:   rgba(220,38,38,0.08) !important;
-–yellow-bg:rgba(217,119,6,0.08) !important;
-–green-bg: rgba(22,163,74,0.08) !important;
-}
+/* ── KPIs ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:var(–s1);border:1px solid var(–border);border-radius:12px;padding:16px 14px 12px;position:relative;overflow:hidden;transition:transform .18s,border-color .18s}
+.kpi:hover{transform:translateY(-2px);border-color:var(–accent)}
+.kpi::after{content:’’;position:absolute;top:0;left:0;right:0;height:2px}
+.kpi.k-total::after{background:linear-gradient(90deg,var(–blue),#79c0ff)}
+.kpi.k-res::after  {background:linear-gradient(90deg,var(–green),#7ee787)}
+.kpi.k-pen::after  {background:linear-gradient(90deg,var(–yellow),#f2cc60)}
+.kpi.k-efect::after{background:linear-gradient(90deg,var(–purple),#d2a8ff)}
+.kpi-label{font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(–muted);margin-bottom:6px}
+.kpi-val{font-family:var(–fd);font-size:2.2rem;font-weight:700;line-height:1}
+.kpi.k-total .kpi-val{color:var(–blue)}
+.kpi.k-res   .kpi-val{color:var(–green)}
+.kpi.k-pen   .kpi-val{color:var(–yellow)}
+.kpi.k-efect .kpi-val{color:var(–purple)}
+.kpi-sub{font-size:.66rem;color:var(–muted);margin-top:3px}
+.kpi-prog{margin-top:8px;height:3px;background:var(–s3);border-radius:99px;overflow:hidden}
+.kpi-prog-fill{height:100%;border-radius:99px;transition:width .8s ease}
+.k-res  .kpi-prog-fill{background:var(–green)}
+.k-pen  .kpi-prog-fill{background:var(–yellow)}
+.k-efect.kpi-prog-fill{background:var(–purple)}
 
-- { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+/* ── SEMAFORO ── */
+.sg{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(–s1);border:1px solid var(–border);border-radius:12px;padding:12px 16px;margin-bottom:14px}
+.sg-tag{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(–muted)}
+.sg-pill{display:flex;align-items:center;gap:7px;border-radius:99px;padding:5px 13px;border:1px solid}
+.sg-pill.red   {background:var(–red-s);border-color:var(–red-b)}
+.sg-pill.yellow{background:var(–yellow-s);border-color:var(–yellow-b)}
+.sg-pill.green {background:var(–green-s);border-color:var(–green-b)}
+.sg-dot{width:7px;height:7px;border-radius:50%;animation:blink 1.6s ease-in-out infinite}
+.sg-pill.red    .sg-dot{background:var(–red)}
+.sg-pill.yellow .sg-dot{background:var(–yellow)}
+.sg-pill.green  .sg-dot{background:var(–green)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.sg-txt{font-family:var(–fd);font-size:.8rem;font-weight:700}
+.sg-pill.red    .sg-txt{color:var(–red)}
+.sg-pill.yellow .sg-txt{color:var(–yellow)}
+.sg-pill.green  .sg-txt{color:var(–green)}
+.sg-info{font-size:.68rem;color:var(–muted);margin-left:auto}
 
-body {
-background: #fff !important;
-color: #0f172a !important;
-padding: 0 !important;
-font-size: 11px !important;
-background-image: none !important;
-}
+/* ── UMBRALES ── */
+.umbral-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.uchip{display:flex;align-items:center;gap:4px;border-radius:6px;padding:4px 9px;font-size:.63rem;font-weight:600;letter-spacing:.05em;border:1px solid}
+.uchip.red   {background:var(–red-s);color:var(–red);border-color:var(–red-b)}
+.uchip.yellow{background:var(–yellow-s);color:var(–yellow);border-color:var(–yellow-b)}
+.uchip.green {background:var(–green-s);color:var(–green);border-color:var(–green-b)}
 
-/* Ocultar controles de UI */
-.top-bar,
-.edit-panel,
-.pdf-btn { display: none !important; }
+/* ── CGRID ── */
+.cgrid{display:grid;grid-template-columns:1fr 300px;gap:12px;align-items:start}
+@media(max-width:800px){.cgrid{grid-template-columns:1fr}}
+.panel{background:var(–s1);border:1px solid var(–border);border-radius:12px;overflow:hidden}
+.phead{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(–border);background:var(–s2)}
+.ptitle{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(–muted)}
+.pbadge{font-size:.66rem;color:var(–accent);font-weight:600}
+table{width:100%;border-collapse:collapse}
+thead th{padding:7px 12px;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(–muted);text-align:left;background:var(–s2);border-bottom:1px solid var(–border)}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.04);transition:background .12s}
+tbody tr:hover{background:rgba(88,166,255,.04)}
+tbody tr:last-child{border-bottom:none}
+td{padding:8px 12px;font-size:.78rem}
+.td-rank{color:var(–muted);font-weight:700;font-size:.76rem;width:22px}
+.td-zona{font-weight:500}
+.td-cant{text-align:center;font-family:var(–fd);font-weight:700;font-size:.98rem}
+.td-chip{text-align:center}
+.chip{display:inline-flex;align-items:center;gap:2px;font-size:.58rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:99px;white-space:nowrap;border:1px solid}
+.chip.red   {background:var(–red-s);color:var(–red);border-color:var(–red-b)}
+.chip.yellow{background:var(–yellow-s);color:var(–yellow);border-color:var(–yellow-b)}
+.chip.green {background:var(–green-s);color:var(–green);border-color:var(–green-b)}
+.td-bar{width:55px}
+.mbar{height:4px;border-radius:99px;background:var(–s3);overflow:hidden}
+.mbar-fill{height:100%;border-radius:99px}
+.mbar-fill.red   {background:var(–red)}
+.mbar-fill.yellow{background:var(–yellow)}
+.mbar-fill.green {background:var(–green)}
 
-/* Header PDF */
-header {
-border-bottom: 2px solid #0369a1 !important;
-margin-bottom: 16px !important;
-padding-bottom: 12px !important;
-}
-.header-left h1 {
-font-size: 1.5rem !important;
-color: #0f172a !important;
-}
-.header-left h1 span { color: #0369a1 !important; }
-.header-left p { color: #64748b !important; font-size: 0.72rem !important; }
-.badge { background: #eff6ff !important; border-color: #bfdbfe !important; color: #1d4ed8 !important; }
-.date-txt { color: #64748b !important; }
+/* bar chart */
+.chart-body{padding:12px 10px}
+.brows{display:flex;flex-direction:column;gap:6px}
+.brow{display:flex;align-items:center;gap:6px}
+.bzona{font-size:.63rem;color:var(–muted);width:66px;flex-shrink:0;text-align:right;font-weight:500}
+.btrack{flex:1;height:17px;background:var(–s3);border-radius:4px;overflow:hidden}
+.bfill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:5px;font-family:var(–fd);font-size:.62rem;font-weight:700;color:#fff;min-width:18px;transition:width 1.1s cubic-bezier(.16,1,.3,1)}
+.bfill.red   {background:linear-gradient(90deg,rgba(248,81,73,.4),var(–red))}
+.bfill.yellow{background:linear-gradient(90deg,rgba(227,179,65,.4),var(–yellow))}
+.bfill.green {background:linear-gradient(90deg,rgba(63,185,80,.3),var(–green))}
 
-/* KPIs */
-.kpi-grid { gap: 8px !important; margin-bottom: 14px !important; }
-.kpi {
-background: #f8fafc !important;
-border: 1px solid #e2e8f0 !important;
-break-inside: avoid;
-padding: 14px 14px 12px !important;
-}
-.kpi:hover { transform: none !important; }
-.kpi.total::before       { background: linear-gradient(90deg, #0369a1, #0284c7) !important; }
-.kpi.resueltos::before   { background: linear-gradient(90deg, #16a34a, #22c55e) !important; }
-.kpi.pendientes::before  { background: linear-gradient(90deg, #d97706, #f59e0b) !important; }
-.kpi.efectividad::before { background: linear-gradient(90deg, #7c3aed, #a855f7) !important; }
-.kpi-label { color: #64748b !important; }
-.kpi.total      .kpi-value { color: #0369a1 !important; }
-.kpi.resueltos  .kpi-value { color: #16a34a !important; }
-.kpi.pendientes .kpi-value { color: #d97706 !important; }
-.kpi.efectividad .kpi-value { color: #7c3aed !important; }
-.kpi-sub { color: #94a3b8 !important; }
-.kpi-bar { background: #e2e8f0 !important; }
-.resueltos  .kpi-bar-fill  { background: #16a34a !important; }
-.pendientes .kpi-bar-fill  { background: #d97706 !important; }
-.efectividad .kpi-bar-fill { background: #7c3aed !important; }
+.legend{display:flex;gap:10px;padding:8px 14px;border-top:1px solid var(–border);flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:4px;font-size:.6rem;color:var(–muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.ldot{width:6px;height:6px;border-radius:50%}
 
-/* Semáforo */
-.semaforo-global { background: #f8fafc !important; border-color: #e2e8f0 !important; margin-bottom: 14px !important; }
-.sg-label { color: #64748b !important; }
-.sg-dot { animation: none !important; box-shadow: none !important; }
-.sg-dot.red    { background: #dc2626 !important; }
-.sg-dot.yellow { background: #d97706 !important; }
-.sg-dot.green  { background: #16a34a !important; }
-.sg-text.red    { color: #dc2626 !important; }
-.sg-text.yellow { color: #d97706 !important; }
-.sg-text.green  { color: #16a34a !important; }
-.sg-desc { color: #64748b !important; }
+footer{margin-top:18px;padding-top:14px;border-top:1px solid var(–border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+footer p{font-size:.62rem;color:var(–muted)}
+.flogo{font-family:var(–fd);font-size:.68rem;font-weight:700;letter-spacing:.08em;color:rgba(88,166,255,.35);text-transform:uppercase}
 
-/* Layout: tabla + gráfico lado a lado en impresión */
-.content-grid { grid-template-columns: 1fr 280px !important; gap: 10px !important; }
+/* edit hint */
+.edit-hint{display:inline-block;font-size:.58rem;color:var(–muted);background:var(–s2);border:1px solid var(–border);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:middle;font-style:normal;opacity:.7}
 
-/* Panels */
-.panel { background: #f8fafc !important; border-color: #e2e8f0 !important; break-inside: avoid; }
-.panel-header { background: #f1f5f9 !important; border-bottom-color: #e2e8f0 !important; }
-.panel-title { color: #475569 !important; }
-.panel-count { color: #0369a1 !important; }
-
-/* Table */
-thead th { color: #64748b !important; background: #f1f5f9 !important; border-bottom-color: #e2e8f0 !important; }
-tbody tr { border-bottom-color: #f1f5f9 !important; }
-tbody tr:hover { background: none !important; }
-.rank { color: #94a3b8 !important; }
-.zona-name { color: #1e293b !important; }
-.chip-red    { background: rgba(220,38,38,0.08) !important; color: #dc2626 !important; border-color: rgba(220,38,38,0.2) !important; }
-.chip-yellow { background: rgba(217,119,6,0.08) !important; color: #d97706 !important; border-color: rgba(217,119,6,0.2) !important; }
-.chip-green  { background: rgba(22,163,74,0.08)  !important; color: #16a34a !important; border-color: rgba(22,163,74,0.2)  !important; }
-.mini-bar { background: #e2e8f0 !important; }
-
-/* Bar chart */
-.bar-track { background: #e2e8f0 !important; }
-.bar-fill.c-red    { background: linear-gradient(90deg, rgba(220,38,38,.4), #dc2626) !important; }
-.bar-fill.c-yellow { background: linear-gradient(90deg, rgba(217,119,6,.4), #d97706) !important; }
-.bar-fill.c-green  { background: linear-gradient(90deg, rgba(22,163,74,.35), #16a34a) !important; }
-.bar-zona { color: #64748b !important; }
-
-/* Legend */
-.legend { border-top-color: #e2e8f0 !important; }
-.legend-item { color: #64748b !important; }
-
-/* Footer */
-footer { border-top-color: #e2e8f0 !important; margin-top: 14px !important; }
-footer p { color: #94a3b8 !important; }
-.footer-logo { color: #bfdbfe !important; }
-
-/* Sello CONFIDENCIAL */
-.print-stamp { display: flex !important; }
-}
-
-/* Sello — oculto en pantalla */
-.print-stamp {
-display: none;
-position: fixed;
-top: 12mm;
-right: 12mm;
-border: 2px solid rgba(220,38,38,0.55);
-border-radius: 4px;
-padding: 4px 10px;
-font-family: var(–font-d);
-font-size: 0.65rem;
-font-weight: 900;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: rgba(220,38,38,0.6);
-transform: rotate(-8deg);
-pointer-events: none;
+@media print{
+@page{size:A4 portrait;margin:12mm 10mm}
+:root{–bg:#fff;–s1:#f8fafc;–s2:#f1f5f9;–s3:#e2e8f0;–border:#e2e8f0;–text:#0f172a;–muted:#64748b;–red:#dc2626;–red-s:rgba(220,38,38,.08);–red-b:rgba(220,38,38,.2);–yellow:#b45309;–yellow-s:rgba(180,83,9,.08);–yellow-b:rgba(180,83,9,.2);–green:#15803d;–green-s:rgba(21,128,61,.08);–green-b:rgba(21,128,61,.2);–blue:#1d4ed8;–blue-s:rgba(29,78,216,.08);–purple:#6d28d9}
+*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+body{background:#fff!important;padding:0!important;background-image:none!important}
+.topbar,.epanel,.edit-hint{display:none!important}
+.kpi:hover,tbody tr:hover{transform:none!important;background:none!important}
+.sg-dot{animation:none!important}
+.cgrid{grid-template-columns:1fr 250px!important}
 }
 </style>
 
 </head>
-<body class="mode-medidor">
+<body>
 
-<!-- Sello impresión -->
+<!-- TOPBAR -->
 
-<div class="print-stamp">Uso Interno</div>
-
-<!-- ═══ TOP BAR ═════════════════════════════════════ -->
-
-<div class="top-bar">
-  <div class="mode-group">
-    <span class="mode-label">Tipo de Reclamo:</span>
-    <button class="mode-btn active" id="btn-medidor" onclick="setMode('medidor')">
-      <span>🔧</span> Pérdida Caja del Medidor
-    </button>
-    <button class="mode-btn" id="btn-agua" onclick="setMode('agua')">
-      <span>💧</span> Falta de Agua / Poca Presión
-    </button>
+<div class="topbar">
+  <div class="modes">
+    <button class="mode-btn active" id="btn-m" onclick="setMode('medidor')">🔧 Pérdida Caja del Medidor</button>
+    <button class="mode-btn"        id="btn-a" onclick="setMode('agua')">💧 Falta de Agua / Poca Presión</button>
   </div>
-  <button class="pdf-btn" onclick="generarPDF()">
-    <span class="pdf-icon">📄</span> Generar PDF
-  </button>
+  <div class="top-actions">
+    <button class="tbtn" onclick="window.print()">📄 PDF</button>
+  </div>
 </div>
 
-<!-- ═══ HEADER ════════════════════════════════════════ -->
+<!-- EDIT PANEL -->
+
+<div class="epanel">
+  <div class="ehead" onclick="toggleEdit()">
+    <span class="ehead-lbl">✏️ Panel de Edición Completo</span>
+    <span class="echev" id="echev">▼</span>
+  </div>
+  <div class="econtent" id="econtent">
+    <div class="etabs">
+      <div class="etab active" onclick="switchTab('textos')">📝 Textos</div>
+      <div class="etab" onclick="switchTab('datos')">📊 Datos & KPIs</div>
+      <div class="etab" onclick="switchTab('zonas')">📍 Zonas</div>
+      <div class="etab" onclick="switchTab('colores')">🎨 Fondo & Color</div>
+    </div>
+
+```
+<!-- TAB: TEXTOS -->
+<div class="etab-body active" id="tab-textos">
+  <div class="eg">
+    <div class="eg-title">🏷️ Textos del Encabezado</div>
+    <div class="fg" style="grid-column:1/-1"><label>Etiqueta de categoría (tag pequeño)</label><input id="t-htag" value="🔧 Pérdida · Caja del Medidor"></div>
+    <div class="fg" style="grid-column:1/-1"><label>Título principal (parte resaltada)</label><input id="t-h1" value="Pérdida Caja del Medidor"></div>
+    <div class="fg" style="grid-column:1/-1"><label>Subtítulo del header</label><input id="t-hsub" value="Sistema de Gestión · Resumen Operativo 2026"></div>
+
+    <div class="eg-title">📦 Etiquetas de KPIs</div>
+    <div class="fg"><label>KPI — Total</label><input id="t-lbl-total" value="Total Reclamos"></div>
+    <div class="fg"><label>KPI — Resueltos</label><input id="t-lbl-res" value="Atendidos / Finiquitados / Rechazados"></div>
+    <div class="fg"><label>KPI — Pendientes</label><input id="t-lbl-pen" value="Asignados / Pendientes"></div>
+    <div class="fg"><label>KPI — Efectividad</label><input id="t-lbl-efect" value="Efectividad de Gestión"></div>
+    <div class="fg"><label>Sub-texto Efectividad</label><input id="t-sub-efect" value="Tasa de cierre acumulada"></div>
+
+    <div class="eg-title">📌 Títulos de Paneles</div>
+    <div class="fg"><label>Panel tabla</label><input id="t-panel-tabla" value="📍 Ranking por Zona"></div>
+    <div class="fg"><label>Panel gráfico</label><input id="t-panel-chart" value="📈 Barras por Zona"></div>
+
+    <div class="eg-title">🦶 Pie de Página</div>
+    <div class="fg" style="grid-column:1/-1"><label>Texto del pie</label><input id="t-footer" value="Período enero–abril 2026 · Actualización:"></div>
+    <div class="fg" style="grid-column:1/-1"><label>Logo/Marca (derecha)</label><input id="t-flogo" value="Gestión Operativa · Sistema de Reclamos"></div>
+
+    <div style="grid-column:1/-1">
+      <button class="apply-btn" onclick="applyTextos()">✅ Aplicar textos</button>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: DATOS -->
+<div class="etab-body" id="tab-datos">
+  <div class="eg">
+    <div class="eg-title">📊 Números Principales</div>
+    <div class="fg"><label>Total Reclamos</label><input type="number" id="i-total" value="2143"></div>
+    <div class="fg"><label>Resueltos</label><input type="number" id="i-res" value="1034"></div>
+    <div class="fg"><label>Pendientes</label><input type="number" id="i-pen" value="1109"></div>
+
+    <div class="eg-title semcfg">🚦 Umbrales del Semáforo</div>
+    <div class="fg"><label>🔴 Crítico — más de</label><input type="number" id="i-crit" value="100"></div>
+    <div class="fg"><label>🟡 Alto/Medio — más de</label><input type="number" id="i-mid" value="40"></div>
+
+    <div style="grid-column:1/-1">
+      <button class="apply-btn" onclick="applyDatos()">✅ Aplicar datos</button>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: ZONAS -->
+<div class="etab-body" id="tab-zonas">
+  <div class="zg" id="zg"></div>
+  <button class="apply-btn" onclick="applyZonas()" style="margin-top:12px">✅ Aplicar zonas</button>
+</div>
+
+<!-- TAB: COLORES -->
+<div class="etab-body" id="tab-colores">
+  <div class="eg">
+    <div class="eg-title">🎨 Temas Predefinidos</div>
+    <div class="themes" style="grid-column:1/-1" id="themes"></div>
+
+    <div class="eg-title">🖌️ Color de Fondo Personalizado</div>
+    <div class="color-row" style="grid-column:1/-1">
+      <label>Color exacto:</label>
+      <input type="color" id="bg-picker" value="#060910" oninput="applyCustomBg(this.value)">
+      <div class="fg" style="flex:0 0 auto;margin:0">
+        <input type="text" id="bg-hex" value="#060910" placeholder="#000000" style="width:100px" oninput="tryHex(this.value)">
+      </div>
+    </div>
+
+    <div class="eg-title">✨ Color de Acento</div>
+    <div class="color-row" style="grid-column:1/-1">
+      <label>Acento:</label>
+      <input type="color" id="acc-picker" value="#58a6ff" oninput="applyAccent(this.value)">
+      <div class="fg" style="flex:0 0 auto;margin:0">
+        <input type="text" id="acc-hex" value="#58a6ff" placeholder="#58a6ff" style="width:100px" oninput="tryAccentHex(this.value)">
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- HEADER -->
 
 <header>
-  <div class="header-left">
-    <h1>Reclamos — <span id="title-span">Pérdida Caja del Medidor</span></h1>
-    <p id="main-sub">Sistema de Gestión · Resumen Operativo 2026</p>
-  </div>
-  <div class="header-right">
-    <span class="badge" id="badge-txt">🔧 Pérdida · Caja del Medidor</span>
-    <span class="date-txt" id="fecha"></span>
+  <div class="hinner">
+    <div>
+      <div class="htag" id="el-htag">🔧 Pérdida · Caja del Medidor</div>
+      <h1>Reclamos — <em id="el-h1" contenteditable spellcheck="false">Pérdida Caja del Medidor</em> <span class="edit-hint">clic para editar</span></h1>
+      <p class="hsub" id="el-hsub" contenteditable spellcheck="false">Sistema de Gestión · Resumen Operativo 2026</p>
+    </div>
+    <div class="hdate" id="hdate"></div>
   </div>
 </header>
 
-<!-- ═══ PANEL DE EDICIÓN ══════════════════════════════ -->
-
-<div class="edit-panel">
-  <div class="edit-toggle" onclick="toggleEdit()">
-    <span class="edit-toggle-title">✏️ Editar datos del dashboard</span>
-    <span class="edit-arrow" id="edit-arrow">▼</span>
-  </div>
-  <div class="edit-body" id="edit-body">
-    <div class="edit-grid">
-      <div class="edit-section-title">📊 KPIs Generales</div>
-      <div class="field-group">
-        <label>Total de Reclamos</label>
-        <input type="number" id="inp-total" value="2143">
-      </div>
-      <div class="field-group">
-        <label>Atendidos / Finiquitados / Rechazados</label>
-        <input type="number" id="inp-resueltos" value="1034">
-      </div>
-      <div class="field-group">
-        <label>Asignados / Pendientes</label>
-        <input type="number" id="inp-pendientes" value="1109">
-      </div>
-      <div class="edit-section-title">📍 Reclamos por Zona</div>
-      <div class="zone-edit-grid" id="zone-edit-grid"></div>
-      <div style="grid-column:1/-1">
-        <button class="apply-btn" onclick="applyEdits()">✅ Aplicar cambios</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ KPIs ══════════════════════════════════════════ -->
+<!-- KPIs -->
 
 <div class="kpi-grid">
-  <div class="kpi total">
-    <div class="kpi-label">Total Reclamos</div>
-    <div class="kpi-value" id="kpi-total">2.143</div>
-    <div class="kpi-sub">Acumulado al día de hoy · 2026</div>
+  <div class="kpi k-total">
+    <div class="kpi-label" id="el-lbl-total">Total Reclamos</div>
+    <div class="kpi-val" id="kv-total">2.143</div>
+    <div class="kpi-sub">Acumulado 2026</div>
   </div>
-  <div class="kpi resueltos">
-    <div class="kpi-label">Atendidos / Finiquitados / Rechazados</div>
-    <div class="kpi-value" id="kpi-resueltos">1.034</div>
-    <div class="kpi-sub" id="kpi-res-sub">48% del total resueltos</div>
-    <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-res" style="width:48%"></div></div>
+  <div class="kpi k-res">
+    <div class="kpi-label" id="el-lbl-res">Atendidos / Finiquitados / Rechazados</div>
+    <div class="kpi-val" id="kv-res">1.034</div>
+    <div class="kpi-sub" id="ks-res">48% resueltos</div>
+    <div class="kpi-prog"><div class="kpi-prog-fill" id="kp-res" style="width:48%"></div></div>
   </div>
-  <div class="kpi pendientes">
-    <div class="kpi-label">Asignados / Pendientes</div>
-    <div class="kpi-value" id="kpi-pendientes">1.109</div>
-    <div class="kpi-sub" id="kpi-pen-sub">51% del total en curso</div>
-    <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-pen" style="width:51%"></div></div>
+  <div class="kpi k-pen">
+    <div class="kpi-label" id="el-lbl-pen">Asignados / Pendientes</div>
+    <div class="kpi-val" id="kv-pen">1.109</div>
+    <div class="kpi-sub" id="ks-pen">51% en curso</div>
+    <div class="kpi-prog"><div class="kpi-prog-fill" id="kp-pen" style="width:51%"></div></div>
   </div>
-  <div class="kpi efectividad">
-    <div class="kpi-label">Efectividad de Gestión</div>
-    <div class="kpi-value" id="kpi-efect">48%</div>
-    <div class="kpi-sub">Tasa de cierre acumulada</div>
-    <div class="kpi-bar"><div class="kpi-bar-fill" id="bar-efect" style="width:48%"></div></div>
+  <div class="kpi k-efect">
+    <div class="kpi-label" id="el-lbl-efect">Efectividad de Gestión</div>
+    <div class="kpi-val" id="kv-efect">48%</div>
+    <div class="kpi-sub" id="el-sub-efect">Tasa de cierre acumulada</div>
+    <div class="kpi-prog"><div class="kpi-prog-fill" id="kp-efect" style="width:48%"></div></div>
   </div>
 </div>
 
-<!-- ═══ SEMÁFORO GLOBAL ═══════════════════════════════ -->
+<!-- SEMÁFORO -->
 
-<div class="semaforo-global">
-  <div class="sg-label">🚦 Semáforo Global del Sistema</div>
-  <div class="sg-status">
-    <div class="sg-dot red" id="sg-dot"></div>
-    <div class="sg-text red" id="sg-text">Crítico — Backlog Elevado</div>
+<div class="sg">
+  <span class="sg-tag">🚦 Semáforo Global</span>
+  <div class="sg-pill red" id="sg-pill">
+    <div class="sg-dot"></div>
+    <span class="sg-txt" id="sg-txt">Crítico — Backlog Elevado</span>
   </div>
-  <div class="sg-desc" id="sg-desc">5 zonas en estado crítico · 51% pendiente de resolución</div>
+  <span class="sg-info" id="sg-info">5 zonas críticas · 51% pendiente</span>
 </div>
 
-<!-- ═══ CONTENT GRID ══════════════════════════════════ -->
+<!-- UMBRALES -->
 
-<div class="content-grid">
+<div class="umbral-bar">
+  <div class="uchip red"    id="uc-red">🔴 Crítico — más de 100</div>
+  <div class="uchip yellow" id="uc-yel">🟡 Alto/Medio — 41 a 100</div>
+  <div class="uchip green"  id="uc-grn">🟢 Bajo — 40 o menos</div>
+</div>
+
+<!-- CONTENT -->
+
+<div class="cgrid">
   <div class="panel">
-    <div class="panel-header">
-      <span class="panel-title">📍 Ranking por Zona — Tabla Inteligente</span>
-      <span class="panel-count" id="panel-count">13 zonas activas</span>
+    <div class="phead">
+      <span class="ptitle" id="el-panel-tabla">📍 Ranking por Zona</span>
+      <span class="pbadge" id="pbadge">13 zonas activas</span>
     </div>
     <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Zona</th>
-          <th style="text-align:center">Reclamos</th>
-          <th style="text-align:center">Estado</th>
-          <th>Volumen</th>
-        </tr>
-      </thead>
-      <tbody id="tabla-zonas"></tbody>
+      <thead><tr><th>#</th><th>Zona</th><th style="text-align:center">Reclamos</th><th style="text-align:center">Estado</th><th>Vol.</th></tr></thead>
+      <tbody id="tbody"></tbody>
     </table>
     <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> Crítico &gt;150</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div> Alto/Medio 41–150</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Bajo ≤40</div>
+      <div class="li"><div class="ldot" style="background:var(--red)"></div>Crítico</div>
+      <div class="li"><div class="ldot" style="background:var(--yellow)"></div>Alto/Medio</div>
+      <div class="li"><div class="ldot" style="background:var(--green)"></div>Bajo</div>
     </div>
   </div>
-
   <div class="panel">
-    <div class="panel-header">
-      <span class="panel-title">📈 Barras por Zona</span>
-    </div>
-    <div class="chart-body">
-      <div class="bar-chart" id="bar-chart"></div>
-    </div>
+    <div class="phead"><span class="ptitle" id="el-panel-chart">📈 Barras por Zona</span></div>
+    <div class="chart-body"><div class="brows" id="bchart"></div></div>
     <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> Crítico</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div> Alto/Medio</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Bajo</div>
+      <div class="li"><div class="ldot" style="background:var(--red)"></div>Crítico</div>
+      <div class="li"><div class="ldot" style="background:var(--yellow)"></div>Medio</div>
+      <div class="li"><div class="ldot" style="background:var(--green)"></div>Bajo</div>
     </div>
   </div>
 </div>
 
-<!-- ═══ FOOTER ════════════════════════════════════════ -->
+<!-- FOOTER -->
 
 <footer>
-  <p>Datos correspondientes al período enero–abril 2026 · Actualización: <span id="hoy2"></span> · Generado con Dashboard PRO</p>
-  <div class="footer-logo" id="footer-logo">Gestión Operativa · Sistema de Reclamos</div>
+  <p><span id="el-footer">Período enero–abril 2026 · Actualización:</span> <span id="fdate"></span> · Dashboard PRO</p>
+  <div class="flogo" id="el-flogo">Gestión Operativa · Sistema de Reclamos</div>
 </footer>
 
 <script>
-// ════════════════════════════════════════
-//  DATA
-// ════════════════════════════════════════
-const DATA = {
-  medidor: {
-    titulo: 'Pérdida Caja del Medidor', badge: '🔧 Pérdida · Caja del Medidor',
-    total: 2143, resueltos: 1034, pendientes: 1109,
-    zonas: [
-      { nombre:'Zona 12',        cant:256 },{ nombre:'Zona 15',        cant:203 },
-      { nombre:'Zona 14',        cant:169 },{ nombre:'Zona 26 F.M.',   cant:126 },
-      { nombre:'Zona 13',        cant:103 },{ nombre:'Zona 28 Luque',  cant: 72 },
-      { nombre:'Zona 29 MRA',    cant: 63 },{ nombre:'Zona 10',        cant: 55 },
-      { nombre:'Zona 11',        cant: 39 },{ nombre:'Zona 18 V.Elisa',cant:  7 },
-      { nombre:'Zona 37 S.A.',   cant:  6 },{ nombre:'Zona 27 S.L.',   cant:  6 },
-      { nombre:'Zona 16 Limpio', cant:  5 },
-    ]
-  },
-  agua: {
-    titulo: 'Falta de Agua y Poca Presión', badge: '💧 Falta de Agua / Poca Presión',
-    total: 0, resueltos: 0, pendientes: 0,
-    zonas: [
-      { nombre:'Zona 10', cant:0 },{ nombre:'Zona 11', cant:0 },
-      { nombre:'Zona 12', cant:0 },{ nombre:'Zona 13', cant:0 },
-      { nombre:'Zona 14', cant:0 },{ nombre:'Zona 15', cant:0 },
-      { nombre:'Zona 16 Limpio',  cant:0 },{ nombre:'Zona 18 V.Elisa', cant:0 },
-      { nombre:'Zona 26 F.M.',    cant:0 },{ nombre:'Zona 27 S.L.',    cant:0 },
-      { nombre:'Zona 28 Luque',   cant:0 },{ nombre:'Zona 29 MRA',     cant:0 },
-      { nombre:'Zona 37 S.A.',    cant:0 },
-    ]
+// ══ ESTADO ══════════════════════════════
+let CRIT=100, MID=40, mode='medidor';
+
+// ══ TEMAS ═══════════════════════════════
+const THEMES=[
+  {name:'Noche',     bg:'#060910', s1:'#0d1117', s2:'#161b22', s3:'#21262d', border:'#30363d', text:'#e6edf3', muted:'#7d8590'},
+  {name:'Pizarra',   bg:'#0f172a', s1:'#1e293b', s2:'#263248', s3:'#334155', border:'#475569', text:'#f1f5f9', muted:'#94a3b8'},
+  {name:'Carbón',    bg:'#18181b', s1:'#27272a', s2:'#3f3f46', s3:'#52525b', border:'#71717a', text:'#fafafa',  muted:'#a1a1aa'},
+  {name:'Bosque',    bg:'#0a1a0f', s1:'#0f2418', s2:'#183322', s3:'#1f4028', border:'#2d6040', text:'#d1fae5', muted:'#6ee7b7'},
+  {name:'Oceano',    bg:'#0a0f1a', s1:'#0f1b2d', s2:'#162436', s3:'#1e3248', border:'#2a4a6e', text:'#dbeafe', muted:'#93c5fd'},
+  {name:'Crepúsculo',bg:'#1a0a1a', s1:'#2d0f2d', s2:'#3f1a3f', s3:'#5a2a5a', border:'#7a3a7a', text:'#f3e8ff', muted:'#d8b4fe'},
+  {name:'Amanecer',  bg:'#1a0a00', s1:'#2d1500', s2:'#3f2000', s3:'#5a3000', border:'#8a5000', text:'#fff7ed', muted:'#fdba74'},
+  {name:'Blanco',    bg:'#f8fafc', s1:'#ffffff', s2:'#f1f5f9', s3:'#e2e8f0', border:'#cbd5e1', text:'#0f172a', muted:'#64748b'},
+];
+
+function buildThemes(){
+  const c=document.getElementById('themes');
+  c.innerHTML='';
+  THEMES.forEach((t,i)=>{
+    const d=document.createElement('div');
+    d.className='th-swatch'+(i===0?' active':'');
+    d.title=t.name;
+    d.style.background=`linear-gradient(135deg,${t.bg} 50%,${t.s1} 50%)`;
+    d.onclick=()=>applyTheme(t,d);
+    c.appendChild(d);
+  });
+}
+
+function applyTheme(t,el){
+  document.querySelectorAll('.th-swatch').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  const r=document.documentElement.style;
+  r.setProperty('--bg',   t.bg);
+  r.setProperty('--s1',   t.s1);
+  r.setProperty('--s2',   t.s2);
+  r.setProperty('--s3',   t.s3);
+  r.setProperty('--border',t.border);
+  r.setProperty('--text', t.text);
+  r.setProperty('--muted',t.muted);
+  document.getElementById('bg-picker').value=t.bg;
+  document.getElementById('bg-hex').value=t.bg;
+}
+
+function applyCustomBg(v){
+  document.documentElement.style.setProperty('--bg',v);
+  document.getElementById('bg-hex').value=v;
+}
+function tryHex(v){
+  if(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(v)){
+    applyCustomBg(v);
+    document.getElementById('bg-picker').value=v;
   }
+}
+function applyAccent(v){
+  document.documentElement.style.setProperty('--accent',v);
+  document.documentElement.style.setProperty('--blue',v);
+  document.getElementById('acc-hex').value=v;
+  // refresh blue-s
+  const r=parseInt(v.slice(1,3),16),g=parseInt(v.slice(3,5),16),b=parseInt(v.slice(5,7),16);
+  document.documentElement.style.setProperty('--blue-s',`rgba(${r},${g},${b},0.15)`);
+}
+function tryAccentHex(v){
+  if(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(v)){
+    applyAccent(v);
+    document.getElementById('acc-picker').value=v;
+  }
+}
+
+// ══ DATA ════════════════════════════════
+const DATA={
+  medidor:{titulo:'Pérdida Caja del Medidor',htag:'🔧 Pérdida · Caja del Medidor',total:2143,res:1034,pen:1109,
+    zonas:[{n:'Zona 12',c:256},{n:'Zona 15',c:203},{n:'Zona 14',c:169},{n:'Zona 26 F.M.',c:126},{n:'Zona 13',c:103},{n:'Zona 28 Luque',c:72},{n:'Zona 29 MRA',c:63},{n:'Zona 10',c:55},{n:'Zona 11',c:39},{n:'Zona 18 V.Elisa',c:7},{n:'Zona 37 S.A.',c:6},{n:'Zona 27 S.L.',c:6},{n:'Zona 16 Limpio',c:5}]},
+  agua:{titulo:'Falta de Agua y Poca Presión',htag:'💧 Falta de Agua / Poca Presión',total:0,res:0,pen:0,
+    zonas:[{n:'Zona 10',c:0},{n:'Zona 11',c:0},{n:'Zona 12',c:0},{n:'Zona 13',c:0},{n:'Zona 14',c:0},{n:'Zona 15',c:0},{n:'Zona 16 Limpio',c:0},{n:'Zona 18 V.Elisa',c:0},{n:'Zona 26 F.M.',c:0},{n:'Zona 27 S.L.',c:0},{n:'Zona 28 Luque',c:0},{n:'Zona 29 MRA',c:0},{n:'Zona 37 S.A.',c:0}]}
 };
 
-let currentMode = 'medidor';
+function cls(c){return c>CRIT?'red':c>MID?'yellow':'green'}
+function lbl(c){return c>CRIT?'🔴 Crítico':c>MID?'🟡 Alto/Medio':'🟢 Bajo'}
 
-function classify(c) {
-  if (c > 150) return { label:'🔴 Crítico',    cls:'chip-red',    bar:'fill-red',    chart:'c-red',    color:'var(--red)'    };
-  if (c >= 41) return { label:'🟡 Alto/Medio', cls:'chip-yellow', bar:'fill-yellow', chart:'c-yellow', color:'var(--yellow)' };
-  return             { label:'🟢 Bajo',        cls:'chip-green',  bar:'fill-green',  chart:'c-green',  color:'var(--green)'  };
+function render(){
+  const d=DATA[mode];
+  const zs=[...d.zonas].sort((a,b)=>b.c-a.c);
+  const MAX=Math.max(...zs.map(z=>z.c),1);
+  const pR=d.total?Math.round(d.res/d.total*100):0;
+  const pP=d.total?Math.round(d.pen/d.total*100):0;
+
+  // header
+  document.getElementById('el-htag').textContent=d.htag;
+  document.getElementById('el-h1').textContent=d.titulo;
+  document.getElementById('kv-total').textContent=d.total.toLocaleString('es-PY');
+  document.getElementById('kv-res').textContent=d.res.toLocaleString('es-PY');
+  document.getElementById('kv-pen').textContent=d.pen.toLocaleString('es-PY');
+  document.getElementById('kv-efect').textContent=pR+'%';
+  document.getElementById('ks-res').textContent=pR+'% resueltos';
+  document.getElementById('ks-pen').textContent=pP+'% en curso';
+  document.getElementById('kp-res').style.width=pR+'%';
+  document.getElementById('kp-pen').style.width=pP+'%';
+  document.getElementById('kp-efect').style.width=pR+'%';
+
+  // semaforo
+  const crits=zs.filter(z=>z.c>CRIT).length;
+  const altas=zs.filter(z=>z.c>MID&&z.c<=CRIT).length;
+  let slvl='green',smsg='Operación Normal';
+  if(crits>0){slvl='red';smsg='Crítico — Backlog Elevado';}
+  else if(altas>2){slvl='yellow';smsg='Alto — Atención Requerida';}
+  document.getElementById('sg-pill').className='sg-pill '+slvl;
+  document.getElementById('sg-txt').textContent=smsg;
+  document.getElementById('sg-info').textContent=crits+' zona(s) crítica(s) · '+pP+'% pendiente';
+
+  document.getElementById('uc-red').textContent='🔴 Crítico — más de '+CRIT;
+  document.getElementById('uc-yel').textContent='🟡 Alto/Medio — '+(MID+1)+' a '+CRIT;
+  document.getElementById('uc-grn').textContent='🟢 Bajo — '+MID+' o menos';
+
+  // tabla
+  const tb=document.getElementById('tbody');
+  tb.innerHTML='';
+  zs.forEach((z,i)=>{
+    const cl=cls(z.c),lb=lbl(z.c);
+    const clr=cl==='red'?'var(--red)':cl==='yellow'?'var(--yellow)':'var(--green)';
+    const pct=Math.round(z.c/MAX*100);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="td-rank">${i+1}</td><td class="td-zona">${z.n}</td><td class="td-cant" style="color:${clr}">${z.c}</td><td class="td-chip"><span class="chip ${cl}">${lb}</span></td><td class="td-bar"><div class="mbar"><div class="mbar-fill ${cl}" style="width:${pct}%"></div></div></td>`;
+    tb.appendChild(tr);
+  });
+  document.getElementById('pbadge').textContent=zs.length+' zonas activas';
+
+  // barras
+  const bc=document.getElementById('bchart');
+  bc.innerHTML='';
+  zs.forEach(z=>{
+    const cl=cls(z.c),pct=Math.round(z.c/MAX*100);
+    const row=document.createElement('div');
+    row.className='brow';
+    row.innerHTML=`<div class="bzona">${z.n.replace('Zona ','Z.')}</div><div class="btrack"><div class="bfill ${cl}" style="width:0%" data-w="${pct}%">${z.c}</div></div>`;
+    bc.appendChild(row);
+  });
+  setTimeout(()=>{ document.querySelectorAll('.bfill[data-w]').forEach(el=>el.style.width=el.dataset.w); },60);
 }
 
-// ════════════════════════════════════════
-//  RENDER
-// ════════════════════════════════════════
-function renderDashboard() {
-  const d = DATA[currentMode];
-  const zonas = [...d.zonas].sort((a,b) => b.cant - a.cant);
-  const MAX = Math.max(...zonas.map(z => z.cant), 1);
-
-  document.getElementById('title-span').textContent = d.titulo;
-  document.getElementById('badge-txt').textContent  = d.badge;
-
-  const pctRes = d.total ? Math.round(d.resueltos  / d.total * 100) : 0;
-  const pctPen = d.total ? Math.round(d.pendientes / d.total * 100) : 0;
-
-  document.getElementById('kpi-total').textContent      = d.total.toLocaleString('es-PY');
-  document.getElementById('kpi-resueltos').textContent  = d.resueltos.toLocaleString('es-PY');
-  document.getElementById('kpi-pendientes').textContent = d.pendientes.toLocaleString('es-PY');
-  document.getElementById('kpi-efect').textContent      = pctRes + '%';
-  document.getElementById('kpi-res-sub').textContent    = pctRes + '% del total resueltos';
-  document.getElementById('kpi-pen-sub').textContent    = pctPen + '% del total en curso';
-  document.getElementById('bar-res').style.width        = pctRes + '%';
-  document.getElementById('bar-pen').style.width        = pctPen + '%';
-  document.getElementById('bar-efect').style.width      = pctRes + '%';
-
-  // Semáforo global
-  const criticas = zonas.filter(z => z.cant > 150).length;
-  const altas    = zonas.filter(z => z.cant >= 41 && z.cant <= 150).length;
-  let lvl = 'green', msg = 'Operación Normal';
-  if (criticas > 0)    { lvl='red';    msg='Crítico — Backlog Elevado'; }
-  else if (altas > 2)  { lvl='yellow'; msg='Alto — Atención Requerida'; }
-  document.getElementById('sg-dot').className  = 'sg-dot '  + lvl;
-  document.getElementById('sg-text').className = 'sg-text ' + lvl;
-  document.getElementById('sg-text').textContent = msg;
-  document.getElementById('sg-desc').textContent =
-    criticas + ' zona(s) críticas · ' + pctPen + '% pendiente de resolución';
-
-  // Tabla
-  const tbody = document.getElementById('tabla-zonas');
-  tbody.innerHTML = '';
-  zonas.forEach((z, i) => {
-    const s   = classify(z.cant);
-    const pct = Math.round((z.cant / MAX) * 100);
-    const tr  = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="rank">${i+1}</td>
-      <td class="zona-name">${z.nombre}</td>
-      <td class="cant" style="color:${s.color}">${z.cant}</td>
-      <td class="status"><span class="chip ${s.cls}">${s.label}</span></td>
-      <td class="bar-wrap"><div class="mini-bar"><div class="mini-bar-fill ${s.bar}" style="width:${pct}%"></div></div></td>
-    `;
-    tbody.appendChild(tr);
+// ══ TABS ════════════════════════════════
+function switchTab(id){
+  document.querySelectorAll('.etab').forEach((t,i)=>{
+    const ids=['textos','datos','zonas','colores'];
+    t.classList.toggle('active',ids[i]===id);
   });
-  document.getElementById('panel-count').textContent = zonas.length + ' zonas activas';
-
-  // Gráfico
-  const chart = document.getElementById('bar-chart');
-  chart.innerHTML = '';
-  zonas.forEach(z => {
-    const s   = classify(z.cant);
-    const pct = Math.round((z.cant / MAX) * 100);
-    const row = document.createElement('div');
-    row.className = 'bar-row';
-    row.innerHTML = `
-      <div class="bar-zona">${z.nombre.replace('Zona ','Z.')}</div>
-      <div class="bar-track">
-        <div class="bar-fill ${s.chart}" style="width:0%" data-w="${pct}%">${z.cant}</div>
-      </div>
-    `;
-    chart.appendChild(row);
-  });
-  setTimeout(() => {
-    document.querySelectorAll('.bar-fill[data-w]').forEach(el => { el.style.width = el.dataset.w; });
-  }, 80);
+  document.querySelectorAll('.etab-body').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  if(id==='zonas') buildZones();
 }
 
-// ════════════════════════════════════════
-//  EDIT
-// ════════════════════════════════════════
-function buildEditInputs() {
-  const d = DATA[currentMode];
-  document.getElementById('inp-total').value      = d.total;
-  document.getElementById('inp-resueltos').value  = d.resueltos;
-  document.getElementById('inp-pendientes').value = d.pendientes;
-  const grid = document.getElementById('zone-edit-grid');
-  grid.innerHTML = '';
-  d.zonas.forEach((z, i) => {
-    const row = document.createElement('div');
-    row.className = 'zone-edit-row';
-    row.innerHTML = `<label title="${z.nombre}">${z.nombre}</label><input type="number" min="0" data-idx="${i}" value="${z.cant}">`;
-    grid.appendChild(row);
+function buildZones(){
+  const d=DATA[mode];
+  const zg=document.getElementById('zg');
+  zg.innerHTML='';
+  d.zonas.forEach((z,i)=>{
+    const r=document.createElement('div');
+    r.className='zr';
+    r.innerHTML=`<label title="${z.n}">${z.n}</label><input type="number" min="0" data-i="${i}" value="${z.c}">`;
+    zg.appendChild(r);
   });
 }
 
-function applyEdits() {
-  const d = DATA[currentMode];
-  d.total      = parseInt(document.getElementById('inp-total').value)      || 0;
-  d.resueltos  = parseInt(document.getElementById('inp-resueltos').value)  || 0;
-  d.pendientes = parseInt(document.getElementById('inp-pendientes').value) || 0;
-  document.querySelectorAll('#zone-edit-grid input[data-idx]').forEach(inp => {
-    d.zonas[parseInt(inp.dataset.idx)].cant = parseInt(inp.value) || 0;
-  });
-  renderDashboard();
+// ══ APPLY ═══════════════════════════════
+function applyTextos(){
+  // panel labels
+  document.getElementById('el-panel-tabla').textContent=document.getElementById('t-panel-tabla').value;
+  document.getElementById('el-panel-chart').textContent=document.getElementById('t-panel-chart').value;
+  document.getElementById('el-lbl-total').textContent=document.getElementById('t-lbl-total').value;
+  document.getElementById('el-lbl-res').textContent=document.getElementById('t-lbl-res').value;
+  document.getElementById('el-lbl-pen').textContent=document.getElementById('t-lbl-pen').value;
+  document.getElementById('el-lbl-efect').textContent=document.getElementById('t-lbl-efect').value;
+  document.getElementById('el-sub-efect').textContent=document.getElementById('t-sub-efect').value;
+  document.getElementById('el-footer').textContent=document.getElementById('t-footer').value;
+  document.getElementById('el-flogo').textContent=document.getElementById('t-flogo').value;
+  // header
+  document.getElementById('el-htag').textContent=document.getElementById('t-htag').value;
+  document.getElementById('el-h1').textContent=document.getElementById('t-h1').value;
+  document.getElementById('el-hsub').textContent=document.getElementById('t-hsub').value;
+  // sync data titles
+  DATA[mode].titulo=document.getElementById('t-h1').value;
+  DATA[mode].htag=document.getElementById('t-htag').value;
 }
 
-function toggleEdit() {
-  const body  = document.getElementById('edit-body');
-  const arrow = document.getElementById('edit-arrow');
-  const open  = body.classList.toggle('open');
-  arrow.classList.toggle('open', open);
-  if (open) buildEditInputs();
+function applyDatos(){
+  CRIT=parseInt(document.getElementById('i-crit').value)||100;
+  MID=parseInt(document.getElementById('i-mid').value)||40;
+  const d=DATA[mode];
+  d.total=parseInt(document.getElementById('i-total').value)||0;
+  d.res=parseInt(document.getElementById('i-res').value)||0;
+  d.pen=parseInt(document.getElementById('i-pen').value)||0;
+  render();
 }
 
-// ════════════════════════════════════════
-//  MODE SWITCH
-// ════════════════════════════════════════
-function setMode(mode) {
-  currentMode = mode;
-  document.body.className = 'mode-' + mode;
-  document.getElementById('btn-medidor').classList.toggle('active', mode === 'medidor');
-  document.getElementById('btn-agua').classList.toggle('active',    mode === 'agua');
-  buildEditInputs();
-  renderDashboard();
+function applyZonas(){
+  const d=DATA[mode];
+  document.querySelectorAll('#zg input[data-i]').forEach(inp=>{ d.zonas[+inp.dataset.i].c=parseInt(inp.value)||0; });
+  render();
 }
 
-// ════════════════════════════════════════
-//  GENERAR PDF
-// ════════════════════════════════════════
-function generarPDF() {
-  // Asegurar que las barras estén al ancho correcto antes de imprimir
-  document.querySelectorAll('.bar-fill[data-w]').forEach(el => { el.style.width = el.dataset.w; });
-
-  // Título del documento = tipo de reclamo + fecha
-  const d    = DATA[currentMode];
-  const hoy  = new Date().toLocaleDateString('es-PY', { day:'2-digit', month:'long', year:'numeric' });
-  const prev = document.title;
-  document.title = `Dashboard Reclamos — ${d.titulo} — ${hoy}`;
-
-  window.print();
-
-  // Restaurar título original
-  setTimeout(() => { document.title = prev; }, 1000);
+// ══ EDIT TOGGLE ═════════════════════════
+function toggleEdit(){
+  const c=document.getElementById('econtent');
+  const v=document.getElementById('echev');
+  const open=c.classList.toggle('open');
+  v.classList.toggle('open',open);
+  if(open) buildZones();
 }
 
-// ════════════════════════════════════════
-//  INIT
-// ════════════════════════════════════════
-const now = new Date();
-const fmt = now.toLocaleDateString('es-PY', { day:'2-digit', month:'long', year:'numeric' });
-document.getElementById('fecha').textContent = fmt;
-document.getElementById('hoy2').textContent  = fmt;
-renderDashboard();
+// ══ MODE ════════════════════════════════
+function setMode(m){
+  mode=m;
+  document.getElementById('btn-m').classList.toggle('active',m==='medidor');
+  document.getElementById('btn-a').classList.toggle('active',m==='agua');
+  // sync text inputs
+  document.getElementById('t-htag').value=DATA[m].htag;
+  document.getElementById('t-h1').value=DATA[m].titulo;
+  document.getElementById('i-total').value=DATA[m].total;
+  document.getElementById('i-res').value=DATA[m].res;
+  document.getElementById('i-pen').value=DATA[m].pen;
+  buildZones();
+  render();
+}
+
+// ══ INIT ════════════════════════════════
+const fmt=new Date().toLocaleDateString('es-PY',{day:'2-digit',month:'long',year:'numeric'});
+document.getElementById('hdate').textContent=fmt;
+document.getElementById('fdate').textContent=fmt;
+buildThemes();
+render();
 </script>
 
 </body>
